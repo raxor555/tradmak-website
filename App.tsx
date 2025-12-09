@@ -199,17 +199,17 @@ const App: React.FC = () => {
 
       <main>
         {/* --- PREMIUM HERO SECTION --- */}
-        <section className="relative h-screen flex flex-col overflow-hidden border-b border-gray-900/50">
+        <section className="relative h-screen min-h-[600px] flex flex-col overflow-hidden border-b border-gray-900/50">
           
           {/* Animated Shader Background */}
           <div className="absolute inset-0 z-0">
             {/* Deep base */}
             <div className="absolute inset-0 bg-black-rich"></div>
             
-            {/* Animated Blobs (Shaders) */}
-            <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-accent-primary/20 rounded-full blur-[120px] mix-blend-screen animate-blob filter"></div>
-            <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[100px] mix-blend-screen animate-blob animation-delay-2000 filter"></div>
-            <div className="absolute top-[30%] left-[40%] w-[400px] h-[400px] bg-cyan-900/20 rounded-full blur-[80px] mix-blend-screen animate-blob animation-delay-4000 filter"></div>
+            {/* Animated Blobs (Shaders) - Scaled down slightly */}
+            <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-accent-primary/15 rounded-full blur-[100px] mix-blend-screen animate-blob filter"></div>
+            <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-900/15 rounded-full blur-[90px] mix-blend-screen animate-blob animation-delay-2000 filter"></div>
+            <div className="absolute top-[30%] left-[40%] w-[300px] h-[300px] bg-cyan-900/15 rounded-full blur-[70px] mix-blend-screen animate-blob animation-delay-4000 filter"></div>
             
             {/* Grid Overlay with Fade */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
@@ -218,36 +218,36 @@ const App: React.FC = () => {
 
           <SwissGrid className="relative z-10 h-full pointer-events-none">
             {/* Left Content: Typography - VERTICALLY CENTERED (LIFTED) */}
-            <div className="col-span-12 lg:col-span-6 h-full flex flex-col justify-center pb-12 pointer-events-auto relative z-20">
+            <div className="col-span-12 lg:col-span-6 h-full flex flex-col justify-center pb-8 pointer-events-auto relative z-20">
               <div className="animate-fade-in-up">
                 
                 {/* Status Pill */}
-                <div className="inline-flex items-center gap-3 mb-8">
-                  <div className="h-[1px] w-12 bg-accent-primary"></div>
+                <div className="inline-flex items-center gap-3 mb-6">
+                  <div className="h-[1px] w-8 bg-accent-primary"></div>
                   <span className="text-[10px] font-mono text-accent-primary uppercase tracking-widest">Next Gen Logistics</span>
                 </div>
 
-                {/* Massive Headline */}
-                <h1 className="text-6xl md:text-8xl lg:text-[7.5rem] font-bold text-white leading-[0.85] tracking-tighter uppercase font-sans mb-8">
+                {/* Scaled Down Headline */}
+                <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-white leading-[0.9] tracking-tighter uppercase font-sans mb-6">
                   Empowering <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-300 to-gray-600">Global Trade</span>
                 </h1>
                 
-                {/* Montserrat Sub-headline with Typing Animation */}
-                <div className="flex flex-col md:flex-row items-start gap-6 mb-12 max-w-4xl">
-                   <div className="text-2xl md:text-4xl font-montserrat font-light text-white leading-tight">
+                {/* Scaled Down Sub-headline */}
+                <div className="flex flex-col md:flex-row items-start gap-6 mb-8 max-w-4xl">
+                   <div className="text-xl md:text-2xl font-montserrat font-light text-white leading-tight">
                      through Intelligent <span className="font-semibold">{typingText}</span><span className="animate-blink">|</span>
                    </div>
                 </div>
 
                 {/* Description & CTAs - Widened container */}
-                <div className="flex flex-col md:flex-row md:items-end gap-8 md:gap-16 border-t border-gray-800 pt-8 max-w-3xl">
-                  <p className="text-base text-gray-400 leading-relaxed max-w-2xl">
+                <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-12 border-t border-gray-800 pt-6 max-w-2xl">
+                  <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-lg">
                      Partnering with manufacturing leaders to optimize international supply chains through advanced digitalization and strategic foresight.
                   </p>
                   
                   <div className="flex gap-4 shrink-0">
-                    <ButtonPrimary onClick={() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'})}>
+                    <ButtonPrimary onClick={() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'})} className="py-4 px-8 text-xs">
                       Explore Capabilities
                     </ButtonPrimary>
                   </div>
@@ -257,30 +257,30 @@ const App: React.FC = () => {
 
             {/* Right Content: AI Trade Glassmorphism Component (Vertically Centered Right) */}
             <div className="col-span-12 lg:col-span-6 h-full flex flex-col justify-center items-end pointer-events-none md:pointer-events-auto relative z-10 hidden lg:flex">
-              <div className="w-full max-w-[480px] mr-0 animate-fade-in-right delay-200">
+              <div className="w-full max-w-[420px] mr-0 animate-fade-in-right delay-200">
                 
                 {/* Main Glass Card: Neural Logistics Core */}
-                <div className="relative glass-card p-8 backdrop-blur-xl border border-white/10 shadow-2xl">
+                <div className="relative glass-card p-6 backdrop-blur-xl border border-white/10 shadow-2xl">
                   {/* Header */}
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="relative p-3 bg-accent-primary/10 border border-accent-primary/20">
-                        <Cpu className="w-6 h-6 text-accent-primary" />
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent-primary rounded-full animate-pulse shadow-[0_0_8px_#0047FF]"></div>
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="relative p-2 bg-accent-primary/10 border border-accent-primary/20">
+                        <Cpu className="w-5 h-5 text-accent-primary" />
+                        <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse shadow-[0_0_8px_#0047FF]"></div>
                       </div>
                       <div>
-                        <div className="text-[10px] font-mono text-accent-primary uppercase tracking-widest mb-1">Trade OS v2.4</div>
-                        <div className="text-xl font-bold text-white tracking-tight">Supply Chain AI</div>
+                        <div className="text-[9px] font-mono text-accent-primary uppercase tracking-widest mb-0.5">Trade OS v2.4</div>
+                        <div className="text-lg font-bold text-white tracking-tight">Supply Chain AI</div>
                       </div>
                     </div>
                     <div className="text-right">
-                       <div className="text-[10px] font-mono text-gray-400 uppercase">Optimization</div>
-                       <div className="text-green-400 font-mono font-bold text-lg">99.1%</div>
+                       <div className="text-[9px] font-mono text-gray-400 uppercase">Optimization</div>
+                       <div className="text-green-400 font-mono font-bold text-base">99.1%</div>
                     </div>
                   </div>
                   
                   {/* Visualization Area: Active Route */}
-                  <div className="relative h-48 mb-6 bg-black/40 border border-white/5 p-6 overflow-hidden">
+                  <div className="relative h-40 mb-5 bg-black/40 border border-white/5 p-4 overflow-hidden">
                     {/* Grid Background */}
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
                     
@@ -289,38 +289,38 @@ const App: React.FC = () => {
                     <div className="absolute top-1/2 left-6 right-6 h-[1px] bg-accent-primary/50 blur-[2px] animate-pulse"></div>
                     
                     {/* Nodes */}
-                    <div className="absolute top-1/2 left-6 w-4 h-4 bg-gray-700 border border-gray-500 rounded-full transform -translate-y-1/2 z-10"></div>
-                    <div className="absolute top-1/2 right-6 w-4 h-4 bg-white border border-white rounded-full transform -translate-y-1/2 z-10 shadow-[0_0_10px_white]"></div>
+                    <div className="absolute top-1/2 left-6 w-3 h-3 bg-gray-700 border border-gray-500 rounded-full transform -translate-y-1/2 z-10"></div>
+                    <div className="absolute top-1/2 right-6 w-3 h-3 bg-white border border-white rounded-full transform -translate-y-1/2 z-10 shadow-[0_0_10px_white]"></div>
                     
                     {/* Moving Packet */}
                     <div className="absolute top-1/2 left-6 w-32 h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent transform -translate-y-1/2 animate-slide-right z-0"></div>
 
                     {/* Floating Labels */}
-                    <div className="absolute top-8 left-6 text-[10px] font-mono text-gray-500">ORIGIN: DUBAI</div>
-                    <div className="absolute bottom-8 right-6 text-[10px] font-mono text-white text-right">DEST: ROTTERDAM<br/><span className="text-green-400">ETA: -2h</span></div>
+                    <div className="absolute top-6 left-6 text-[9px] font-mono text-gray-500">ORIGIN: DUBAI</div>
+                    <div className="absolute bottom-6 right-6 text-[9px] font-mono text-white text-right">DEST: ROTTERDAM<br/><span className="text-green-400">ETA: -2h</span></div>
                   </div>
 
                   {/* Metrics Rows */}
                   <div className="grid grid-cols-2 gap-px bg-gray-800/50 border border-gray-800/50">
-                    <div className="bg-black/40 p-4 hover:bg-white/5 transition-colors">
-                      <div className="flex items-center gap-2 mb-2 text-gray-400">
+                    <div className="bg-black/40 p-3 hover:bg-white/5 transition-colors">
+                      <div className="flex items-center gap-2 mb-1.5 text-gray-400">
                         <Box className="w-3 h-3" />
-                        <span className="text-[10px] font-mono uppercase">Vol. Metric</span>
+                        <span className="text-[9px] font-mono uppercase">Vol. Metric</span>
                       </div>
-                      <div className="text-white font-mono text-sm">42,850 TEU</div>
+                      <div className="text-white font-mono text-xs">42,850 TEU</div>
                     </div>
-                    <div className="bg-black/40 p-4 hover:bg-white/5 transition-colors">
-                      <div className="flex items-center gap-2 mb-2 text-gray-400">
+                    <div className="bg-black/40 p-3 hover:bg-white/5 transition-colors">
+                      <div className="flex items-center gap-2 mb-1.5 text-gray-400">
                         <Layers className="w-3 h-3" />
-                        <span className="text-[10px] font-mono uppercase">Efficiency</span>
+                        <span className="text-[9px] font-mono uppercase">Efficiency</span>
                       </div>
-                      <div className="text-white font-mono text-sm">+12.4% <span className="text-green-500 text-[10px]">▲</span></div>
+                      <div className="text-white font-mono text-xs">+12.4% <span className="text-green-500 text-[9px]">▲</span></div>
                     </div>
                   </div>
                 </div>
 
                 {/* Decorative Layer Underneath */}
-                <div className="absolute -z-10 top-12 -right-6 w-full h-full border border-gray-800 bg-black/20 backdrop-blur-sm"></div>
+                <div className="absolute -z-10 top-8 -right-4 w-full h-full border border-gray-800 bg-black/20 backdrop-blur-sm"></div>
 
               </div>
             </div>
