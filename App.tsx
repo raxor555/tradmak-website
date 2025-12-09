@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, ArrowUpRight, BarChart3, Globe2, Zap, BrainCircuit, Container, Activity, TrendingUp, Search, Layers, Box, Cpu } from 'lucide-react';
+import { Menu, X, ArrowRight, ArrowUpRight, BarChart3, Globe2, Zap, BrainCircuit, Container, Activity, TrendingUp, Search, Layers, Box, Cpu, ChevronRight, MessageSquare, Clock } from 'lucide-react';
 import { 
   GridSystem, SwissGrid, Section, HeroHeadline, SectionHeadline, SubHeadline, 
   BodyText, MonoLabel, SectionNumber, 
@@ -121,7 +121,7 @@ const App: React.FC = () => {
       <GridSystem />
 
       {/* --- HEADER --- */}
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b ${isScrolled ? 'bg-black-rich/60 backdrop-blur-xl border-gray-800' : 'bg-transparent border-transparent'}`}>
+      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b ${isScrolled ? 'bg-black-rich/80 backdrop-blur-xl border-gray-800' : 'bg-transparent border-transparent'}`}>
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
           <div className="grid grid-cols-12 h-20 md:h-24 items-center">
             
@@ -199,7 +199,7 @@ const App: React.FC = () => {
 
       <main>
         {/* --- PREMIUM HERO SECTION --- */}
-        <section className="relative h-screen min-h-[600px] flex flex-col overflow-hidden border-b border-gray-900/50">
+        <section className="relative h-screen min-h-[600px] flex flex-col overflow-hidden border-b border-gray-800/80">
           
           {/* Animated Shader Background */}
           <div className="absolute inset-0 z-0">
@@ -329,26 +329,28 @@ const App: React.FC = () => {
         </section>
 
         {/* --- ABOUT SECTION --- */}
-        <Section id="about">
+        <Section id="about" className="relative overflow-hidden">
+          {/* Subtle Back Glow to add contrast */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gray-900/40 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
           <SectionNumber number="01" className="left-0 top-0" />
           
           <SwissGrid>
             <div className="col-span-12 lg:col-span-4 pt-4 lg:pt-0">
                <MonoLabel className="mb-4">Company Profile</MonoLabel>
-               {/* Updated Heading to be Big */}
                <SectionHeadline>Precision<br/>in Motion</SectionHeadline>
             </div>
             <div className="col-span-12 lg:col-span-8 flex flex-col gap-12 pt-8 lg:pt-0">
-              <div className="border-l border-gray-800 pl-8 md:pl-12">
-                 <p className="text-2xl md:text-4xl text-white font-light leading-snug tracking-tight mb-8">
+              <div className="border-l border-gray-700/50 pl-8 md:pl-12">
+                 <p className="text-2xl md:text-3xl lg:text-4xl text-white font-light leading-snug tracking-tight mb-8">
                    We envision a dynamic ecosystem where technology accelerates trade efficiency, sustainability, and inclusivity.
                  </p>
-                 <BodyText className="max-w-3xl text-gray-400">
+                 <BodyText className="max-w-3xl text-gray-300">
                    TradMAK leads in industrial B2B business optimization. We don't just move goods; we engineer the flow of international commerce using lean methodologies and cutting-edge SaaS infrastructure to mitigate fragmentation risks.
                  </BodyText>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-900 pt-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-800 pt-8">
                  {[
                    { label: 'Founded', value: 'Dubai' },
                    { label: 'Sector', value: 'Industrial B2B' },
@@ -365,14 +367,17 @@ const App: React.FC = () => {
         </Section>
 
         {/* --- SERVICES SECTION (TIMELINE) --- */}
-        <Section id="services" className="bg-black-rich">
+        <Section id="services" className="bg-black-rich relative">
+          {/* Subtle separation gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black-rich via-gray-950 to-black-rich pointer-events-none -z-10"></div>
+          
           <SectionNumber number="02" className="right-0 top-0" />
           
           <SwissGrid className="mb-24">
             <div className="col-span-12 flex flex-col items-center text-center">
               <MonoLabel className="mb-4 text-accent-primary" color="text-accent-primary">Our Capabilities</MonoLabel>
               <SectionHeadline className="mb-6">Core Services</SectionHeadline>
-              <p className="text-gray-400 max-w-xl mx-auto">
+              <p className="text-gray-300 max-w-xl mx-auto text-lg">
                 Integrated solutions across optimization, trade execution, and technological infrastructure.
               </p>
             </div>
@@ -382,52 +387,57 @@ const App: React.FC = () => {
             {/* Central Line */}
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gray-800 md:-translate-x-1/2"></div>
 
-            <div className="space-y-24 md:space-y-32">
+            <div className="space-y-32">
               
               {/* Block 1 - Left */}
-              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 group">
+              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
                  {/* Anchor Point */}
                  <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-black border border-accent-primary -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-accent-primary group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_rgba(0,0,0,1)]"></div>
                  
                  {/* Left Content */}
-                 <div className="md:text-right md:pr-16 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.02] origin-right">
-                     <div className="font-mono text-8xl font-bold text-gray-800/50 mb-6 transition-colors duration-500 group-hover:text-gray-700/80">01</div>
+                 <div className="md:text-right md:pr-24 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-right">
+                     <div className="font-mono text-8xl font-bold text-gray-800/30 mb-6 transition-colors duration-500 group-hover:text-gray-700/50">01</div>
                      <h3 className="text-4xl md:text-5xl font-bold text-white uppercase mb-6 tracking-tight">Business<br/>Optimization</h3>
-                     <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 ml-auto max-w-xl transition-colors duration-500 group-hover:text-white">
-                       A business process optimization partner for manufacturing units streamlines operations by integrating lean methodologies, advanced analytics, and automation to eliminate inefficiencies, reduce costs, and increase productivity.
+                     <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 ml-auto max-w-xl transition-colors duration-500 group-hover:text-gray-200">
+                       A business process optimization partner for manufacturing units streamlines operations by integrating lean methodologies, advanced analytics, and automation to eliminate inefficiencies.
                      </p>
-                     <ul className="space-y-3 flex flex-col md:items-end">
-                        {['Trade & Distribution Management', 'Process Analysis & Redesign', 'Sustainability Integration', 'Data-Driven Decision-Making', 'Optimization'].map(item => (
+                     <ul className="space-y-4 flex flex-col md:items-end">
+                        {['Trade & Distribution Management', 'Process Analysis & Redesign', 'Sustainability Integration'].map(item => (
                            <li key={item} className="flex items-center gap-3 text-sm md:text-base text-gray-300 font-mono uppercase flex-row md:flex-row-reverse group-hover:text-white transition-colors duration-300">
-                              <div className="w-1.5 h-1.5 bg-accent-primary shrink-0 transition-all duration-300 group-hover:bg-accent-bright group-hover:scale-150 group-hover:shadow-[0_0_8px_rgba(51,119,255,0.6)]"></div> 
+                              <div className="w-1.5 h-1.5 bg-accent-primary shrink-0 transition-all duration-300 group-hover:bg-accent-bright group-hover:scale-150"></div> 
                               <span>{item}</span>
                            </li>
                         ))}
                      </ul>
                  </div>
-                 {/* Right Empty */}
-                 <div className="hidden md:block"></div>
+                 
+                 {/* Right Empty -> VISUAL */}
+                 <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-60 transition-opacity duration-500">
+                     <BarChart3 className="w-64 h-64 text-gray-800 stroke-[0.5]" />
+                 </div>
               </div>
 
               {/* Block 2 - Right */}
-              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 group">
+              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
                  {/* Anchor Point */}
                  <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-black border border-white -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-white group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_rgba(0,0,0,1)]"></div>
                  
-                 {/* Left Empty */}
-                 <div className="hidden md:block"></div>
+                 {/* Left Empty -> VISUAL */}
+                 <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-60 transition-opacity duration-500">
+                     <Globe2 className="w-64 h-64 text-gray-800 stroke-[0.5]" />
+                 </div>
                  
                  {/* Right Content */}
-                 <div className="pl-12 md:pl-16 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.02] origin-left">
-                     <div className="font-mono text-8xl font-bold text-gray-800/50 mb-6 transition-colors duration-500 group-hover:text-gray-700/80">02</div>
+                 <div className="pl-12 md:pl-24 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-left">
+                     <div className="font-mono text-8xl font-bold text-gray-800/30 mb-6 transition-colors duration-500 group-hover:text-gray-700/50">02</div>
                      <h3 className="text-4xl md:text-5xl font-bold text-white uppercase mb-6 tracking-tight">International<br/>Trade</h3>
-                     <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-xl transition-colors duration-500 group-hover:text-white">
-                       A strategic international trade partnership in chemicals focuses on leveraging supply chains, regulatory compliance, and market expertise to manage cross-border transactions. Collaboration includes sourcing raw materials and distributing specialty chemicals. Digital systems improve transparency.
+                     <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-xl transition-colors duration-500 group-hover:text-gray-200">
+                       Leveraging supply chains, regulatory compliance, and market expertise to manage cross-border transactions. Collaboration includes sourcing raw materials and distributing specialty chemicals.
                      </p>
-                     <ul className="space-y-3">
-                        {['Specialty Chemicals Distribution', 'Regulatory Adherence', 'Blockchain & AI Forecasting', 'Trade'].map(item => (
+                     <ul className="space-y-4">
+                        {['Specialty Chemicals Distribution', 'Regulatory Adherence', 'Blockchain & AI Forecasting'].map(item => (
                            <li key={item} className="flex items-center gap-3 text-sm md:text-base text-gray-300 font-mono uppercase group-hover:text-white transition-colors duration-300">
-                              <div className="w-1.5 h-1.5 bg-accent-primary shrink-0 transition-all duration-300 group-hover:bg-accent-bright group-hover:scale-150 group-hover:shadow-[0_0_8px_rgba(51,119,255,0.6)]"></div> 
+                              <div className="w-1.5 h-1.5 bg-accent-primary shrink-0 transition-all duration-300 group-hover:bg-accent-bright group-hover:scale-150"></div> 
                               <span>{item}</span>
                            </li>
                         ))}
@@ -436,28 +446,30 @@ const App: React.FC = () => {
               </div>
 
               {/* Block 3 - Left */}
-              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 group">
+              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
                  {/* Anchor Point */}
                  <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-black border border-accent-primary -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-accent-primary group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_rgba(0,0,0,1)]"></div>
                  
                  {/* Left Content */}
-                 <div className="md:text-right md:pr-16 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.02] origin-right">
-                     <div className="font-mono text-8xl font-bold text-gray-800/50 mb-6 transition-colors duration-500 group-hover:text-gray-700/80">03</div>
+                 <div className="md:text-right md:pr-24 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-right">
+                     <div className="font-mono text-8xl font-bold text-gray-800/30 mb-6 transition-colors duration-500 group-hover:text-gray-700/50">03</div>
                      <h3 className="text-4xl md:text-5xl font-bold text-white uppercase mb-6 tracking-tight">Digitalization<br/>Tech</h3>
-                     <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 ml-auto max-w-xl transition-colors duration-500 group-hover:text-white">
+                     <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 ml-auto max-w-xl transition-colors duration-500 group-hover:text-gray-200">
                        Digitalization in SaaS uses AI, machine learning, and analytics to reshape marketing and operations. Campaigns become personalized, automated, and driven by real-time insight.
                      </p>
-                     <ul className="space-y-3 flex flex-col md:items-end">
+                     <ul className="space-y-4 flex flex-col md:items-end">
                         {['Scalable Cloud & DevOps', 'CRM & Predictive Analytics', 'Hyper-personalized Experiences'].map(item => (
                            <li key={item} className="flex items-center gap-3 text-sm md:text-base text-gray-300 font-mono uppercase flex-row md:flex-row-reverse group-hover:text-white transition-colors duration-300">
-                              <div className="w-1.5 h-1.5 bg-accent-primary shrink-0 transition-all duration-300 group-hover:bg-accent-bright group-hover:scale-150 group-hover:shadow-[0_0_8px_rgba(51,119,255,0.6)]"></div> 
+                              <div className="w-1.5 h-1.5 bg-accent-primary shrink-0 transition-all duration-300 group-hover:bg-accent-bright group-hover:scale-150"></div> 
                               <span>{item}</span>
                            </li>
                         ))}
                      </ul>
                  </div>
-                 {/* Right Empty */}
-                 <div className="hidden md:block"></div>
+                 {/* Right Empty -> VISUAL */}
+                 <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-60 transition-opacity duration-500">
+                     <BrainCircuit className="w-64 h-64 text-gray-800 stroke-[0.5]" />
+                 </div>
               </div>
 
             </div>
@@ -465,7 +477,7 @@ const App: React.FC = () => {
         </Section>
 
         {/* --- APPROACH / DIFFERENTIATORS --- */}
-        <Section id="approach">
+        <Section id="approach" className="overflow-hidden">
           <SectionNumber number="03" className="left-0 top-0" />
           
           <SwissGrid className="mb-20 relative z-10">
@@ -474,14 +486,15 @@ const App: React.FC = () => {
               <SectionHeadline className="mb-6">The Competitive<br/>Advantage</SectionHeadline>
             </div>
             <div className="col-span-12 md:col-span-6 md:pt-10">
-              <p className="text-xl text-gray-300 max-w-lg leading-relaxed border-l border-gray-800 pl-8">
+              <p className="text-xl text-gray-300 max-w-lg leading-relaxed border-l border-gray-700 pl-8">
                 Focused strategic clarity, analytical rigor, and disciplined execution to drive innovation.
               </p>
             </div>
           </SwissGrid>
 
           <SwissGrid className="relative z-10">
-            <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l border-gray-800">
+            {/* Expanded Grid with Gaps */}
+            <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 { id: '01', title: 'Strategic Vision', desc: 'Aligning efforts with long-term business objectives to drive purposeful growth and innovation.' },
                 { id: '02', title: 'Process Efficiency', desc: 'Streamlining workflows with precision to eliminate waste and enhance productivity.' },
@@ -491,13 +504,16 @@ const App: React.FC = () => {
                 { id: '06', title: 'Collaborative', desc: 'Engaging stakeholders to unify efforts and resources toward shared objectives.' }
               ].map((item, index) => (
                 <FadeInItem key={item.id} delay={index * 100} className="h-full">
-                  <div className="group border-r border-b border-gray-800 p-8 hover:bg-white/5 transition-colors duration-300 h-full flex flex-col">
+                  <div className="group border border-gray-800 bg-white/[0.02] p-8 md:p-10 hover:border-accent-primary hover:bg-white/[0.04] transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+                    {/* Subtle Top Accent */}
+                    <div className="absolute top-0 left-0 w-0 h-[2px] bg-accent-primary transition-all duration-500 group-hover:w-full"></div>
+                    
                     <div className="flex justify-between items-start mb-6">
-                       <span className="font-mono text-xs text-gray-600 group-hover:text-accent-primary transition-colors">{item.id}</span>
+                       <span className="font-mono text-xs text-gray-500 group-hover:text-accent-primary transition-colors">{item.id}</span>
                        <div className="w-2 h-2 bg-gray-800 group-hover:bg-accent-primary transition-colors"></div>
                     </div>
-                    <h4 className="text-lg font-bold text-white uppercase tracking-wide mb-4">{item.title}</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed mt-auto">{item.desc}</p>
+                    <h4 className="text-xl font-bold text-white uppercase tracking-wide mb-4 group-hover:text-accent-bright transition-colors">{item.title}</h4>
+                    <p className="text-base text-gray-400 leading-relaxed mt-auto">{item.desc}</p>
                   </div>
                 </FadeInItem>
               ))}
@@ -513,45 +529,52 @@ const App: React.FC = () => {
             <div className="col-span-12 lg:col-span-5 mb-16 lg:mb-0">
               <MonoLabel className="mb-4">Get in touch</MonoLabel>
               <SectionHeadline className="mb-8">Start the<br/>Conversation</SectionHeadline>
-              <p className="text-gray-400 mb-12 max-w-md">
+              <p className="text-gray-300 mb-12 max-w-md text-lg leading-relaxed">
                 Contact our trade experts to discuss how we can optimize your supply chain and digital infrastructure.
               </p>
               
-              <div className="space-y-8">
-                 <div className="border-l border-gray-800 pl-6 group hover:border-accent-primary transition-colors">
-                    <div className="text-xs font-mono text-gray-500 uppercase mb-2">Email</div>
-                    <a href="mailto:connect@tradmak.com" className="text-xl text-white hover:text-accent-primary transition-colors">connect@tradmak.com</a>
+              <div className="space-y-10">
+                 <div className="border-l border-gray-700 pl-6 group hover:border-accent-primary transition-colors">
+                    <div className="text-xs font-mono text-gray-500 uppercase mb-2 flex items-center gap-2"><MessageSquare size={12} /> Email</div>
+                    <a href="mailto:connect@tradmak.com" className="text-xl md:text-2xl text-white hover:text-accent-primary transition-colors font-medium">connect@tradmak.com</a>
                  </div>
-                 <div className="border-l border-gray-800 pl-6 group hover:border-accent-primary transition-colors">
+                 <div className="border-l border-gray-700 pl-6 group hover:border-accent-primary transition-colors">
                     <div className="text-xs font-mono text-gray-500 uppercase mb-2">Location</div>
-                    <address className="text-gray-300 not-italic">
+                    <address className="text-gray-300 not-italic text-lg">
                        TradMAK FZCO<br/>
                        Dubai Silicon Oasis<br/>
                        Dubai, UAE
                     </address>
                  </div>
-                 <div className="border-l border-gray-800 pl-6 group hover:border-accent-primary transition-colors">
+                 <div className="border-l border-gray-700 pl-6 group hover:border-accent-primary transition-colors">
                     <TextLink href="https://wa.me/1234567890">WhatsApp Direct</TextLink>
                  </div>
               </div>
             </div>
 
             <div className="col-span-12 lg:col-span-7">
-               <Card className="h-full bg-gray-900/40 backdrop-blur-sm border-gray-800">
-                  <div className="flex justify-between items-center mb-8">
-                     <h3 className="text-xl font-bold text-white">INQUIRY FORM</h3>
-                     <div className="h-2 w-2 bg-accent-primary rounded-full animate-pulse"></div>
+               <Card className="h-full bg-gray-900/40 backdrop-blur-sm border-gray-800 p-8 md:p-12">
+                  <div className="flex justify-between items-center mb-10">
+                     <h3 className="text-2xl font-bold text-white">INQUIRY FORM</h3>
+                     <div className="flex items-center gap-2">
+                       <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                       <span className="text-[10px] font-mono text-green-500 uppercase tracking-widest">Online</span>
+                     </div>
                   </div>
                   <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                       <Input label="First Name" id="fname" type="text" placeholder="John" />
-                       <Input label="Last Name" id="lname" type="text" placeholder="Doe" />
+                       <Input label="First Name" id="fname" type="text" placeholder="John" className="h-16 text-lg px-2" />
+                       <Input label="Last Name" id="lname" type="text" placeholder="Doe" className="h-16 text-lg px-2" />
                     </div>
-                    <Input label="Corporate Email" id="email" type="email" placeholder="john@company.com" required />
-                    <TextArea label="Message" id="message" placeholder="Details regarding your inquiry..." />
+                    <Input label="Corporate Email" id="email" type="email" placeholder="john@company.com" required className="h-16 text-lg px-2" />
+                    <TextArea label="Message" id="message" placeholder="Details regarding your inquiry..." className="text-lg px-2 py-2" />
                     
-                    <div className="pt-4 flex justify-end">
-                      <ButtonPrimary type="submit" className="w-full md:w-auto">Submit Inquiry</ButtonPrimary>
+                    <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex items-center gap-2 text-gray-500">
+                        <Clock size={14} />
+                        <span className="text-xs">We usually reply within 24 hours.</span>
+                      </div>
+                      <ButtonPrimary type="submit" className="w-full md:w-auto py-5 px-12 text-base">Submit Inquiry</ButtonPrimary>
                     </div>
                   </form>
                </Card>
@@ -560,7 +583,7 @@ const App: React.FC = () => {
 
           {/* Big Footer Text */}
           <div className="w-full flex justify-center items-center py-12 md:py-24 overflow-hidden">
-            <h2 className="text-[12vw] md:text-[15vw] font-bold text-gray-900 leading-none select-none tracking-tighter">TRADMAK</h2>
+            <h2 className="text-[12vw] md:text-[15vw] font-bold text-gray-900 leading-none select-none tracking-tighter hover:text-gray-800 transition-colors duration-500 cursor-default">TRADMAK</h2>
           </div>
 
           {/* Footer Legal */}

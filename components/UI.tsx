@@ -67,8 +67,8 @@ export const AccentLine: React.FC<{ className?: string }> = ({ className = '' })
 );
 
 export const SectionNumber: React.FC<{ number: string; className?: string }> = ({ number, className = '' }) => (
-  <div className={`absolute -z-0 select-none overflow-hidden ${className}`}>
-    <span className="block text-[18vw] leading-none font-bold text-gray-900/40 tracking-tighter font-sans translate-y-[-10%]">
+  <div className={`absolute z-0 pointer-events-none select-none overflow-hidden ${className}`}>
+    <span className="block text-[20vw] leading-none font-bold text-gray-800 opacity-20 tracking-tighter font-sans -translate-y-[15%]">
       {number}
     </span>
   </div>
