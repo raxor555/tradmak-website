@@ -10,6 +10,7 @@ import { AIAgentsPage } from './components/AIAgentsPage';
 import { AIChatbotsPage } from './components/AIChatbotsPage';
 import { AaaSPage } from './components/AaaSPage';
 import { ScheduleDemoPage } from './components/ScheduleDemoPage';
+import { Footer } from './components/Footer';
 
 interface FadeInItemProps {
   children: React.ReactNode;
@@ -282,7 +283,7 @@ const App: React.FC = () => {
 
       <main>
         {activePage === 'ai-agents' ? (
-          <AIAgentsPage />
+          <AIAgentsPage onScheduleDemo={() => navigateTo('schedule-demo')} />
         ) : activePage === 'ai-chatbots' ? (
           <AIChatbotsPage />
         ) : activePage === 'aaas' ? (
@@ -361,7 +362,7 @@ const App: React.FC = () => {
                         <div className="flex items-center gap-3">
                           <div className="relative p-2 bg-blue-swiss/10 border border-blue-swiss/20">
                             <Cpu className="w-5 h-5 text-blue-swiss" />
-                            <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-blue-swiss rounded-full animate-pulse shadow-[0_0_8px_#0047FF]"></div>
+                            <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-blue-swiss rounded-full animate-pulse shadow-[0_0_8px_#00A4DA]"></div>
                           </div>
                           <div>
                             <div className="text-[9px] font-mono text-blue-swiss uppercase tracking-widest mb-0.5">Trade OS v2.4</div>
@@ -673,43 +674,11 @@ const App: React.FC = () => {
                   </Card>
                 </div>
               </SwissGrid>
-
-              {/* Big Footer Text - Black accent */}
-              <div className="w-full flex justify-center items-center py-12 md:py-24 overflow-hidden bg-black text-white">
-                <h2 className="text-[12vw] md:text-[15vw] font-bold text-white leading-none select-none tracking-tighter hover:text-blue-swiss transition-colors duration-500 cursor-default">TRADMAK</h2>
-              </div>
-
-              {/* Footer Legal - Dark grounding */}
-              <div className="border-t border-gray-800 bg-black py-12 relative z-10 text-white">
-                <SwissGrid>
-                  <div className="col-span-12 md:col-span-6 flex flex-col justify-between h-full">
-                    <div className="mb-6 flex items-center gap-3">
-                        <div className="w-2 h-2 bg-blue-swiss"></div>
-                        <span className="text-xl font-bold tracking-tight text-white">TRADMAK</span>
-                    </div>
-                    <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">
-                      © 2025 TradMAK FZCO. All Rights Reserved.
-                    </p>
-                  </div>
-                  <div className="col-span-12 md:col-span-6 flex flex-col md:flex-row justify-end items-end gap-8">
-                    <div className="flex gap-6">
-                        {['LinkedIn', 'Twitter', 'Instagram'].map(social => (
-                          <a key={social} href="#" className="text-xs font-mono text-gray-400 hover:text-white uppercase transition-colors relative group">
-                              {social}
-                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-swiss transition-all duration-300 group-hover:w-full"></span>
-                          </a>
-                        ))}
-                    </div>
-                    <div className="flex gap-6">
-                      <a href="#" className="text-xs text-gray-400 hover:text-white font-mono uppercase">Privacy</a>
-                      <a href="#" className="text-xs text-gray-400 hover:text-white font-mono uppercase">Terms</a>
-                    </div>
-                  </div>
-                </SwissGrid>
-              </div>
             </Section>
           </>
         )}
+
+        <Footer />
         
         {/* Back to Top Button */}
         <button

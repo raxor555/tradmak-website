@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Cpu, Search, Network, ShieldCheck, FileText, BarChart, Users, Layers, Database, Lock } from 'lucide-react';
-import { SwissGrid, Section, SectionHeadline, HeroHeadline, MonoLabel, BodyText, SectionNumber, Card, ButtonPrimary, ButtonOutline } from './UI';
+import { Bot, Cpu, Search, Network, ShieldCheck, FileText, BarChart, Users, Layers, Database, Lock, MessageCircle, ArrowLeft, ArrowRight, Smartphone } from 'lucide-react';
+import { SwissGrid, Section, SectionHeadline, HeroHeadline, MonoLabel, BodyText, SectionNumber, ButtonPrimary, ButtonOutline } from './UI';
 
 // Terminal Data
 const TERMINAL_LINES = [
@@ -19,11 +19,107 @@ const TERMINAL_LINES = [
   { text: "> _", type: "cursor" }
 ];
 
-export const AIAgentsPage: React.FC = () => {
+// Agent Templates Data
+const AGENTS = [
+  {
+    id: "nexus",
+    name: "Nexus",
+    role: "WhatsApp Trade Concierge",
+    desc: "Automated B2B communication on WhatsApp. Handles quote requests, order status updates, and document retrieval via natural language interface.",
+    version: "v1.2.0",
+    stat: "24/7 Availability",
+    icon: Smartphone,
+    color: "text-green-600",
+    bgColor: "bg-green-500/10",
+    borderColor: "border-green-500/20"
+  },
+  {
+    id: "vesta",
+    name: "Vesta",
+    role: "Sourcing & Procurement",
+    desc: "Scours global markets for raw materials, analyzing price volatility and supplier reliability scores in real-time. Automatically initiates RFQs.",
+    version: "v3.4.1",
+    stat: "98.2% Accuracy",
+    icon: Search,
+    color: "text-blue-swiss",
+    bgColor: "bg-blue-swiss/10",
+    borderColor: "border-blue-swiss/20"
+  },
+  {
+    id: "mercury",
+    name: "Mercury",
+    role: "Logistics & Arbitration",
+    desc: "Optimizes multi-modal shipping routes dynamically. Predicts port congestion and re-routes shipments instantly. Handles freight arbitration.",
+    version: "v2.1.0",
+    stat: "-14% Transit Time",
+    icon: Network,
+    color: "text-purple-accent",
+    bgColor: "bg-purple-accent/10",
+    borderColor: "border-purple-accent/20"
+  },
+  {
+    id: "janus",
+    name: "Janus",
+    role: "Risk & Compliance",
+    desc: "Ensures trade compliance across 140+ jurisdictions. Validates HS codes, sanctions lists, and automates letter of credit documentation.",
+    version: "v4.0.2",
+    stat: "ISO 27001",
+    icon: ShieldCheck,
+    color: "text-orange-500",
+    bgColor: "bg-orange-500/10",
+    borderColor: "border-orange-500/20"
+  },
+  {
+    id: "atlas",
+    name: "Atlas",
+    role: "Document Processing",
+    desc: "Intelligent OCR and semantic analysis for Bills of Lading and Invoices. Converts unstructured PDF data into ERP-ready JSON.",
+    version: "v5.1.0",
+    stat: "0.02s Latency",
+    icon: FileText,
+    color: "text-gray-700",
+    bgColor: "bg-gray-500/10",
+    borderColor: "border-gray-500/20"
+  },
+  {
+    id: "orion",
+    name: "Orion",
+    role: "Predictive Forecasting",
+    desc: "Analyzes historical trade data against micro-economic indicators to forecast demand surges and supply shortages.",
+    version: "v2.8.4",
+    stat: "94% Precision",
+    icon: BarChart,
+    color: "text-indigo-500",
+    bgColor: "bg-indigo-500/10",
+    borderColor: "border-indigo-500/20"
+  },
+  {
+    id: "vulcan",
+    name: "Vulcan",
+    role: "Supplier Negotiation",
+    desc: "Autonomous negotiation agent for tail-spend procurement. Engages with suppliers to secure optimal pricing within guardrails.",
+    version: "v1.5.0",
+    stat: "+12% Savings",
+    icon: Users,
+    color: "text-red-500",
+    bgColor: "bg-red-500/10",
+    borderColor: "border-red-500/20"
+  }
+];
+
+interface AIAgentsPageProps {
+  onScheduleDemo: () => void;
+}
+
+export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) => {
   // Terminal Typing Logic
   const [displayedLines, setDisplayedLines] = useState<Array<{text: string, type: string}>>([]);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  
+  // Carousel Logic
+  const [startIndex, setStartIndex] = useState(0);
+  const itemsPerPage = 3;
 
   useEffect(() => {
     if (currentLineIndex >= TERMINAL_LINES.length) return;
@@ -64,6 +160,20 @@ export const AIAgentsPage: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [currentLineIndex, currentCharIndex]);
 
+  const nextSlide = () => {
+    setStartIndex((prev) => (prev + itemsPerPage < AGENTS.length ? prev + 1 : 0));
+  };
+
+  const prevSlide = () => {
+    setStartIndex((prev) => (prev - 1 >= 0 ? prev - 1 : Math.max(0, AGENTS.length - itemsPerPage)));
+  };
+
+  const visibleAgents = AGENTS.slice(startIndex, startIndex + itemsPerPage);
+  // Fill with start if we are at the end to maintain 3 items (optional visual polish)
+  while (visibleAgents.length < itemsPerPage && visibleAgents.length > 0) {
+      // Logic to wrap around can be complex, for simplicity we limit navigation
+      break; 
+  }
 
   return (
     <div className="min-h-screen bg-creme text-black pt-20">
@@ -127,7 +237,7 @@ export const AIAgentsPage: React.FC = () => {
                          <div className="relative w-32 h-32 flex items-center justify-center">
                             <div className="absolute inset-0 border border-blue-swiss/30 rounded-full animate-ping opacity-20"></div>
                             <div className="absolute inset-0 border border-blue-swiss/20 rounded-full w-[120%] h-[120%] -top-[10%] -left-[10%] animate-spin-slow border-dashed"></div>
-                            <div className="w-16 h-16 bg-blue-swiss/5 rounded-full border border-blue-swiss backdrop-blur flex items-center justify-center z-10 shadow-[0_0_30px_rgba(0,71,255,0.1)]">
+                            <div className="w-16 h-16 bg-blue-swiss/5 rounded-full border border-blue-swiss backdrop-blur flex items-center justify-center z-10 shadow-[0_0_30px_rgba(0,164,218,0.1)]">
                                <Cpu className="text-blue-swiss w-8 h-8" />
                             </div>
                             
@@ -171,185 +281,88 @@ export const AIAgentsPage: React.FC = () => {
       {/* --- AGENT CATALOG --- */}
       <Section id="catalog">
         <SectionNumber number="01" className="right-0 top-0" />
-        <SwissGrid className="mb-16">
-          <div className="col-span-12 lg:col-span-8">
-             <MonoLabel className="mb-4 text-blue-swiss" color="text-blue-swiss">Agent Catalog</MonoLabel>
-             <SectionHeadline className="mb-6">AI Agent Templates</SectionHeadline>
-             <p className="text-xl text-gray-600 leading-relaxed max-w-3xl">
-                Choose from 200+ production-ready templates. Customize in minutes. Deploy immediately. These aren't demos — they're real AI agents handling real work.
-             </p>
+        <SwissGrid className="mb-12">
+          <div className="col-span-12 flex flex-col md:flex-row justify-between items-end gap-6">
+             <div className="max-w-3xl">
+                <MonoLabel className="mb-4 text-blue-swiss" color="text-blue-swiss">Agent Catalog</MonoLabel>
+                <SectionHeadline className="mb-6">AI Agent Templates</SectionHeadline>
+                <p className="text-xl text-gray-600 leading-relaxed">
+                   Choose from production-ready templates. Customize in minutes. Deploy immediately.
+                </p>
+             </div>
+             
+             {/* Slider Controls */}
+             <div className="flex items-center gap-3">
+                <button 
+                  onClick={prevSlide}
+                  className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-black"
+                >
+                  <ArrowLeft size={20} />
+                </button>
+                <button 
+                  onClick={nextSlide}
+                  className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-black"
+                >
+                  <ArrowRight size={20} />
+                </button>
+             </div>
           </div>
         </SwissGrid>
 
-        <SwissGrid className="gap-y-8">
-           {/* Agent 1 */}
-           <div className="col-span-12 md:col-span-4">
-              <Card className="h-full flex flex-col justify-between group">
-                 <div>
-                    <div className="flex justify-between items-start mb-6">
-                       <div className="p-3 bg-gray-50 border border-gray-200 text-blue-swiss">
-                          <Search size={24} />
-                       </div>
-                       <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-gray-500 uppercase">Online</span>
-                       </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black uppercase mb-2 group-hover:text-blue-swiss transition-colors">Vesta</h3>
-                    <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">Sourcing & Procurement</div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                       Scours global markets for raw materials, analyzing price volatility and supplier reliability scores in real-time. Automatically initiates RFQs based on inventory thresholds.
-                    </p>
-                 </div>
-                 <div className="border-t border-gray-200 pt-4">
-                    <div className="flex justify-between items-center text-xs font-mono text-gray-500">
-                       <span>v3.4.1</span>
-                       <span>98.2% Accuracy</span>
-                    </div>
-                 </div>
-              </Card>
-           </div>
+        {/* --- CAROUSEL ROW --- */}
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {visibleAgents.map((agent) => (
+              <div key={agent.id} className="relative group h-full min-h-[450px]">
+                 {/* GLASSMORPHISM CARD with SHADER GRADIENT */}
+                 <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/70 to-white/40 backdrop-blur-xl border border-white/60 shadow-lg rounded-xl transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-swiss/30 overflow-hidden">
+                    
+                    {/* Shader / Gradient Blob Effect */}
+                    <div className={`absolute -top-20 -right-20 w-60 h-60 rounded-full blur-[80px] opacity-40 transition-all duration-700 group-hover:scale-150 ${agent.id === 'nexus' ? 'bg-green-400' : 'bg-blue-swiss'}`}></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50 group-hover:via-blue-swiss group-hover:opacity-100 transition-all duration-500"></div>
 
-           {/* Agent 2 */}
-           <div className="col-span-12 md:col-span-4">
-              <Card className="h-full flex flex-col justify-between group">
-                 <div>
-                    <div className="flex justify-between items-start mb-6">
-                       <div className="p-3 bg-gray-50 border border-gray-200 text-blue-swiss">
-                          <Network size={24} />
-                       </div>
-                       <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-gray-500 uppercase">Online</span>
-                       </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black uppercase mb-2 group-hover:text-blue-swiss transition-colors">Mercury</h3>
-                    <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">Logistics & Arbitration</div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                       Optimizes multi-modal shipping routes dynamically. Predicts port congestion and re-routes shipments instantly. Handles freight arbitration and booking autonomously.
-                    </p>
-                 </div>
-                 <div className="border-t border-gray-200 pt-4">
-                    <div className="flex justify-between items-center text-xs font-mono text-gray-500">
-                       <span>v2.1.0</span>
-                       <span>-14% Transit Time</span>
-                    </div>
-                 </div>
-              </Card>
-           </div>
+                    <div className="relative p-8 h-full flex flex-col justify-between z-10">
+                        <div>
+                            {/* Header */}
+                            <div className="flex justify-between items-start mb-8">
+                              <div className={`w-14 h-14 flex items-center justify-center rounded-2xl border backdrop-blur-sm ${agent.bgColor} ${agent.borderColor}`}>
+                                  <agent.icon size={28} className={agent.color} />
+                              </div>
+                              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/50 border border-white/50 backdrop-blur-sm">
+                                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wide">Ready</span>
+                              </div>
+                            </div>
 
-           {/* Agent 3 */}
-           <div className="col-span-12 md:col-span-4">
-              <Card className="h-full flex flex-col justify-between group">
-                 <div>
-                    <div className="flex justify-between items-start mb-6">
-                       <div className="p-3 bg-gray-50 border border-gray-200 text-blue-swiss">
-                          <ShieldCheck size={24} />
-                       </div>
-                       <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-gray-500 uppercase">Online</span>
-                       </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black uppercase mb-2 group-hover:text-blue-swiss transition-colors">Janus</h3>
-                    <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">Risk & Compliance</div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                       Ensures trade compliance across 140+ jurisdictions. Validates HS codes, sanctions lists, and automates letter of credit documentation generation.
-                    </p>
-                 </div>
-                 <div className="border-t border-gray-200 pt-4">
-                    <div className="flex justify-between items-center text-xs font-mono text-gray-500">
-                       <span>v4.0.2</span>
-                       <span>ISO 27001</span>
-                    </div>
-                 </div>
-              </Card>
-           </div>
+                            {/* Content */}
+                            <h3 className="text-3xl font-bold text-black uppercase mb-3 leading-none group-hover:text-blue-swiss transition-colors">{agent.name}</h3>
+                            <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">{agent.role}</div>
+                            <p className="text-gray-700 leading-relaxed mb-6 font-light">
+                              {agent.desc}
+                            </p>
+                        </div>
 
-           {/* Agent 4: Atlas */}
-           <div className="col-span-12 md:col-span-4">
-              <Card className="h-full flex flex-col justify-between group">
-                 <div>
-                    <div className="flex justify-between items-start mb-6">
-                       <div className="p-3 bg-gray-50 border border-gray-200 text-blue-swiss">
-                          <FileText size={24} />
-                       </div>
-                       <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-gray-500 uppercase">Online</span>
-                       </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black uppercase mb-2 group-hover:text-blue-swiss transition-colors">Atlas</h3>
-                    <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">Document Processing</div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                       Intelligent OCR and semantic analysis for Bills of Lading, Commercial Invoices, and Packing Lists. Converts unstructured PDF data into ERP-ready JSON.
-                    </p>
-                 </div>
-                 <div className="border-t border-gray-200 pt-4">
-                    <div className="flex justify-between items-center text-xs font-mono text-gray-500">
-                       <span>v5.1.0</span>
-                       <span>0.02s Latency</span>
+                        {/* Footer */}
+                        <div className="border-t border-gray-200/60 pt-6 mt-4">
+                            <div className="flex justify-between items-center text-xs font-mono text-gray-500">
+                              <span>{agent.version}</span>
+                              <span className="font-bold text-gray-800">{agent.stat}</span>
+                            </div>
+                        </div>
                     </div>
                  </div>
-              </Card>
-           </div>
-
-           {/* Agent 5: Orion */}
-           <div className="col-span-12 md:col-span-4">
-              <Card className="h-full flex flex-col justify-between group">
-                 <div>
-                    <div className="flex justify-between items-start mb-6">
-                       <div className="p-3 bg-gray-50 border border-gray-200 text-blue-swiss">
-                          <BarChart size={24} />
-                       </div>
-                       <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-gray-500 uppercase">Online</span>
-                       </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black uppercase mb-2 group-hover:text-blue-swiss transition-colors">Orion</h3>
-                    <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">Predictive Forecasting</div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                       Analyzes historical trade data against micro-economic indicators to forecast demand surges and supply shortages. Optimizes inventory levels automatically.
-                    </p>
-                 </div>
-                 <div className="border-t border-gray-200 pt-4">
-                    <div className="flex justify-between items-center text-xs font-mono text-gray-500">
-                       <span>v2.8.4</span>
-                       <span>94% Precision</span>
-                    </div>
-                 </div>
-              </Card>
-           </div>
-
-           {/* Agent 6: Vulcan */}
-           <div className="col-span-12 md:col-span-4">
-              <Card className="h-full flex flex-col justify-between group">
-                 <div>
-                    <div className="flex justify-between items-start mb-6">
-                       <div className="p-3 bg-gray-50 border border-gray-200 text-blue-swiss">
-                          <Users size={24} />
-                       </div>
-                       <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-gray-500 uppercase">Online</span>
-                       </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black uppercase mb-2 group-hover:text-blue-swiss transition-colors">Vulcan</h3>
-                    <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">Supplier Negotiation</div>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                       Autonomous negotiation agent for tail-spend procurement. Engages with suppliers via email/chat to secure optimal pricing and payment terms within pre-set guardrails.
-                    </p>
-                 </div>
-                 <div className="border-t border-gray-200 pt-4">
-                    <div className="flex justify-between items-center text-xs font-mono text-gray-500">
-                       <span>v1.5.0</span>
-                       <span>+12% Savings</span>
-                    </div>
-                 </div>
-              </Card>
-           </div>
-        </SwissGrid>
+              </div>
+            ))}
+          </div>
+          
+          {/* Progress Bar for Slider */}
+          <div className="mt-12 w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+             <div 
+               className="h-full bg-black transition-all duration-500 ease-out"
+               style={{ width: `${((startIndex + 1) / (AGENTS.length - itemsPerPage + 1)) * 100}%` }} // Simplified progress calc
+             ></div>
+          </div>
+        </div>
       </Section>
 
       {/* --- TECHNICAL SPECS / TERMINAL --- */}
@@ -528,8 +541,8 @@ export const AIAgentsPage: React.FC = () => {
                <p className="text-gray-600 max-w-xl mx-auto mb-10 text-lg">
                   Integrate TradMAK agents into your existing ERP via our REST API. Full documentation and sandbox environment available.
                </p>
-               <ButtonPrimary onClick={() => document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})}>
-                  Request API Access
+               <ButtonPrimary onClick={onScheduleDemo}>
+                  Schedule Demo
                </ButtonPrimary>
             </div>
          </SwissGrid>

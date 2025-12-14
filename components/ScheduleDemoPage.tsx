@@ -5,8 +5,13 @@ import { SwissGrid, Section, HeroHeadline, MonoLabel } from './UI';
 export const ScheduleDemoPage: React.FC = () => {
   useEffect(() => {
     (async function () {
-      const cal = await getCalApi({"namespace":"initial-sales-call"});
-      cal("ui", {"theme":"light","hideEventTypeDetails":false,"layout":"month_view"});
+      const cal = await getCalApi({"namespace":"tradmak-gtm-team"});
+      cal("ui", {
+        "theme":"light",
+        "cssVarsPerTheme":{"light":{"cal-brand":"#000000"}},
+        "hideEventTypeDetails":false,
+        "layout":"month_view"
+      });
     })();
   }, []);
 
@@ -23,8 +28,8 @@ export const ScheduleDemoPage: React.FC = () => {
             </div>
             <div className="col-span-12 lg:col-span-7 h-[700px] bg-white border border-gray-200 shadow-xl overflow-hidden relative rounded-sm">
                  <Cal 
-                    namespace="initial-sales-call"
-                    calLink="rayyan-shaikh-i8uftl/initial-sales-call"
+                    namespace="tradmak-gtm-team"
+                    calLink="tradmak-gtm-team/tradmak-gtm-team"
                     style={{width:"100%",height:"100%",overflow:"scroll"}}
                     config={{"layout":"month_view","theme":"light"}}
                   />
