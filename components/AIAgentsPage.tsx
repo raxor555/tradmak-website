@@ -495,7 +495,6 @@ export const AIAgentsPage: React.FC = () => {
                          </div>
                      </div>
                  </div>
-                 <ButtonPrimary onClick={() => console.log('Deploy')}>Start Deployment</ButtonPrimary>
              </div>
              <div className="col-span-12 lg:col-span-6 mt-12 lg:mt-0">
                  {/* Visual for Deployment - Simple Abstract UI */}

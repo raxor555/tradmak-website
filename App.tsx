@@ -56,6 +56,8 @@ const App: React.FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [time, setTime] = useState<string>("");
+  const [locationLabel, setLocationLabel] = useState<string>("DXB (GMT+4)");
+  const [userTimezone, setUserTimezone] = useState<string>("Asia/Dubai");
   
   // Routing State
   const [activePage, setActivePage] = useState<'home' | 'ai-agents' | 'ai-chatbots' | 'aaas' | 'schedule-demo'>('home');
@@ -72,25 +74,42 @@ const App: React.FC = () => {
     };
     
     window.addEventListener('scroll', handleScroll);
-    
-    // GMT+4 Time updater
-    const timer = setInterval(() => {
-      const d = new Date();
-      const options: Intl.DateTimeFormatOptions = { 
-        timeZone: 'Asia/Dubai', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit',
-        hour12: false 
-      };
-      setTime(d.toLocaleTimeString('en-US', options));
-    }, 1000);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearInterval(timer);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch Location and Timezone
+  useEffect(() => {
+    fetch('https://ipwho.is/')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const cityDisplay = data.city ? data.city.toUpperCase() : 'LOCAL';
+                const offset = data.timezone.utc;
+                setLocationLabel(`${cityDisplay} (GMT${offset})`);
+                setUserTimezone(data.timezone.id);
+            }
+        })
+        .catch(e => console.log('Location fetch failed', e));
+  }, []);
+
+  // Timer Effect based on userTimezone
+  useEffect(() => {
+    const updateTime = () => {
+        const d = new Date();
+        const options: Intl.DateTimeFormatOptions = { 
+          timeZone: userTimezone, 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          second: '2-digit',
+          hour12: false 
+        };
+        setTime(d.toLocaleTimeString('en-US', options));
+    };
+
+    updateTime(); // Initial update
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, [userTimezone]);
 
   // Typing animation effect
   useEffect(() => {
@@ -181,7 +200,7 @@ const App: React.FC = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold tracking-tight text-black leading-none">TRADMAK</span>
-                <span className="text-[10px] font-mono text-gray-500 tracking-widest uppercase leading-none mt-1">FZCO DUBAI</span>
+                <span className="text-[10px] font-mono text-gray-500 tracking-widest uppercase leading-none mt-1">ECOSYSTEM</span>
               </div>
             </div>
 
@@ -203,7 +222,7 @@ const App: React.FC = () => {
             {/* Desktop CTA & Time - Adjusted Spans */}
             <div className="hidden md:col-span-4 md:flex justify-end items-center gap-4">
               <div className="hidden xl:block text-right mr-2">
-                <span className="block text-[10px] font-mono text-gray-400 uppercase tracking-wider">DXB (GMT+4)</span>
+                <span className="block text-[10px] font-mono text-gray-400 uppercase tracking-wider">{locationLabel}</span>
                 <span className="block text-xs font-mono text-blue-swiss font-medium">{time}</span>
               </div>
               
@@ -255,7 +274,7 @@ const App: React.FC = () => {
           </button>
 
           <div className="pt-12">
-             <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-2">Current Time (DXB)</div>
+             <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-2">Current Time ({locationLabel.split(' ')[0]})</div>
              <div className="text-xl font-mono text-blue-swiss">{time}</div>
           </div>
         </div>
