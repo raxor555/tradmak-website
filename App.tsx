@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, ArrowUpRight, BarChart3, Globe2, Zap, BrainCircuit, Container, Activity, TrendingUp, Search, Layers, Box, Cpu, ChevronRight, MessageSquare, Clock, ArrowUp } from 'lucide-react';
+import { Menu, X, ArrowRight, ArrowUp, ChevronDown, Cpu, MessageSquare, Zap, Globe, Clock, Box, Layers, BrainCircuit, BarChart3, Monitor } from 'lucide-react';
 import { 
   GridSystem, SwissGrid, Section, HeroHeadline, SectionHeadline, SubHeadline, 
   BodyText, MonoLabel, SectionNumber, 
@@ -9,6 +9,8 @@ import {
 import { AIAgentsPage } from './components/AIAgentsPage';
 import { AIChatbotsPage } from './components/AIChatbotsPage';
 import { AaaSPage } from './components/AaaSPage';
+import { WhatsAppAutomationPage } from './components/WhatsAppAutomationPage';
+import { DigitalExperiencePage } from './components/DigitalExperiencePage';
 import { ScheduleDemoPage } from './components/ScheduleDemoPage';
 import { Footer } from './components/Footer';
 
@@ -52,16 +54,20 @@ const FadeInItem: React.FC<FadeInItemProps> = ({ children, delay = 0, className 
   );
 };
 
+type PageType = 'home' | 'ai-agents' | 'ai-chatbots' | 'whatsapp-automation' | 'aaas' | 'digital-experience' | 'schedule-demo';
+
 const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
+  
   const [time, setTime] = useState<string>("");
   const [locationLabel, setLocationLabel] = useState<string>("DXB (GMT+4)");
   const [userTimezone, setUserTimezone] = useState<string>("Asia/Dubai");
   
   // Routing State
-  const [activePage, setActivePage] = useState<'home' | 'ai-agents' | 'ai-chatbots' | 'aaas' | 'schedule-demo'>('home');
+  const [activePage, setActivePage] = useState<PageType>('home');
   
   // Typing animation state
   const [typingText, setTypingText] = useState("");
@@ -150,8 +156,9 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateTo = (page: 'home' | 'ai-agents' | 'ai-chatbots' | 'aaas' | 'schedule-demo', sectionId?: string) => {
+  const navigateTo = (page: PageType, sectionId?: string) => {
     setMobileMenuOpen(false);
+    setProductsDropdownOpen(false);
     
     if (page !== activePage) {
       setActivePage(page);
@@ -175,77 +182,140 @@ const App: React.FC = () => {
     }
   };
 
-  const navItems = [
-    { label: 'Company', page: 'home', section: 'about' },
-    { label: 'AI Agents', page: 'ai-agents', section: undefined },
-    { label: 'AI Chatbots', page: 'ai-chatbots', section: undefined },
-    { label: 'AaaS', page: 'aaas', section: undefined },
-    { label: 'Contact', page: 'home', section: 'contact' }
-  ] as const;
-
   return (
     <div className="relative min-h-screen bg-creme text-black font-sans selection:bg-blue-swiss selection:text-white overflow-hidden">
       
       {/* Background Grid Lines - Light Mode */}
       <GridSystem />
 
-      {/* --- HEADER --- */}
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b ${isScrolled ? 'bg-creme/90 backdrop-blur-xl border-gray-200' : 'bg-transparent border-transparent'}`}>
+      {/* --- PREMIUM HEADER --- */}
+      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'pt-2' : 'pt-6'}`}>
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
-          <div className="grid grid-cols-12 h-20 md:h-24 items-center">
+          <div className={`relative flex items-center justify-between transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-xl border border-white/50 shadow-sm rounded-full px-6 h-16' : 'h-20'}`}>
             
             {/* Logo */}
-            <div className="col-span-6 md:col-span-3 flex items-center gap-3 cursor-pointer" onClick={() => navigateTo('home')}>
-              <div className="w-8 h-8 flex items-center justify-center bg-blue-swiss border border-blue-swiss backdrop-blur-md rounded-none">
-                <div className="w-3 h-3 bg-white shadow-sm"></div>
+            <div className="flex items-center gap-3 cursor-pointer z-50" onClick={() => navigateTo('home')}>
+              <div className="w-8 h-8 flex items-center justify-center bg-blue-swiss border border-blue-swiss backdrop-blur-md rounded-lg shadow-lg shadow-blue-swiss/20">
+                <div className="w-3 h-3 bg-white shadow-sm rounded-sm"></div>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-black leading-none">TRADMAK</span>
-                <span className="text-[10px] font-mono text-gray-500 tracking-widest uppercase leading-none mt-1">ECOSYSTEM</span>
+                <span className="text-lg font-bold tracking-tight text-black leading-none">TRADMAK</span>
+                <span className="text-[9px] font-mono text-gray-500 tracking-widest uppercase leading-none mt-1">ECOSYSTEM</span>
               </div>
             </div>
 
-            {/* Desktop Nav - Adjusted Spans */}
-            <nav className="hidden md:col-span-5 md:flex justify-center h-full">
-              <div className="flex h-full items-center gap-1 rounded-full px-2">
-                {navItems.map((item) => (
-                  <button 
-                    key={item.label} 
-                    onClick={() => navigateTo(item.page, item.section)}
-                    className={`text-xs font-medium uppercase tracking-widest px-3 lg:px-4 py-2 rounded-none transition-all duration-300 ${activePage === item.page && !item.section ? 'text-black bg-black/5 font-bold' : 'text-gray-500 hover:text-black hover:bg-black/5'}`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+            {/* Desktop Nav - Premium Glass Pill */}
+            <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <div className={`flex items-center gap-1 p-1.5 rounded-full transition-all duration-300 ${!isScrolled && 'bg-white/40 backdrop-blur-lg border border-white/40 shadow-sm hover:shadow-md hover:bg-white/60'}`}>
+                
+                {/* Nav Items with rounded hover effect */}
+                <button 
+                  onClick={() => navigateTo('home', 'about')}
+                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                >
+                  Company
+                </button>
+
+                {/* Products Dropdown */}
+                <div 
+                  className="relative group"
+                  onMouseEnter={() => setProductsDropdownOpen(true)}
+                  onMouseLeave={() => setProductsDropdownOpen(false)}
+                >
+                    <button 
+                      className={`flex items-center gap-1 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${productsDropdownOpen ? 'bg-black text-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
+                    >
+                      Products <ChevronDown size={14} className={`transition-transform duration-300 ${productsDropdownOpen ? 'rotate-180' : ''}`}/>
+                    </button>
+
+                    {/* Glass Dropdown Menu */}
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 w-72 transition-all duration-300 origin-top ${productsDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
+                       <div className="bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl rounded-2xl p-2 overflow-hidden flex flex-col gap-1">
+                          
+                          <button 
+                            onClick={() => navigateTo('whatsapp-automation')}
+                            className="text-left px-4 py-4 rounded-xl hover:bg-white transition-all duration-300 group/item flex items-center gap-4 hover:shadow-sm"
+                          >
+                             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 group-hover/item:bg-green-600 group-hover/item:text-white transition-colors">
+                                <MessageSquare size={18}/>
+                             </div>
+                             <div>
+                               <div className="text-xs font-bold text-black uppercase mb-0.5">WhatsApp API</div>
+                               <div className="text-[10px] text-gray-500 font-medium">Enterprise Automation</div>
+                             </div>
+                          </button>
+
+                          <button 
+                            onClick={() => navigateTo('ai-chatbots')}
+                            className="text-left px-4 py-4 rounded-xl hover:bg-white transition-all duration-300 group/item flex items-center gap-4 hover:shadow-sm"
+                          >
+                             <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover/item:bg-blue-swiss group-hover/item:text-white transition-colors">
+                                <Zap size={18}/>
+                             </div>
+                             <div>
+                               <div className="text-xs font-bold text-black uppercase mb-0.5">AI Chatbot</div>
+                               <div className="text-[10px] text-gray-500 font-medium">Conversational Intelligence</div>
+                             </div>
+                          </button>
+                          
+                          <button 
+                            onClick={() => navigateTo('digital-experience')}
+                            className="text-left px-4 py-4 rounded-xl hover:bg-white transition-all duration-300 group/item flex items-center gap-4 hover:shadow-sm"
+                          >
+                             <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 group-hover/item:bg-purple-vivid group-hover/item:text-white transition-colors">
+                                <Monitor size={18}/>
+                             </div>
+                             <div>
+                               <div className="text-xs font-bold text-black uppercase mb-0.5">Digital Exp</div>
+                               <div className="text-[10px] text-gray-500 font-medium">Web, Social & DX</div>
+                             </div>
+                          </button>
+                       </div>
+                    </div>
+                </div>
+
+                <button 
+                  onClick={() => navigateTo('ai-agents')}
+                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                >
+                  AI Agents
+                </button>
+
+                <button 
+                  onClick={() => navigateTo('aaas')}
+                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                >
+                  AaaS
+                </button>
+                
+                <button 
+                  onClick={() => navigateTo('home', 'contact')}
+                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                >
+                  Contact
+                </button>
+
               </div>
             </nav>
 
-            {/* Desktop CTA & Time - Adjusted Spans */}
-            <div className="hidden md:col-span-4 md:flex justify-end items-center gap-4">
-              <div className="hidden xl:block text-right mr-2">
+            {/* Desktop CTA & Time */}
+            <div className="hidden md:flex justify-end items-center gap-4 z-50">
+              <div className={`hidden xl:block text-right mr-2 transition-opacity duration-300 ${isScrolled ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
                 <span className="block text-[10px] font-mono text-gray-400 uppercase tracking-wider">{locationLabel}</span>
                 <span className="block text-xs font-mono text-blue-swiss font-medium">{time}</span>
               </div>
               
               <button 
                 onClick={() => navigateTo('schedule-demo')}
-                className="group relative bg-black hover:bg-gray-800 text-white text-xs font-bold uppercase tracking-wider py-3 px-5 border border-black transition-all duration-300"
+                className="group relative bg-black hover:bg-gray-800 text-white text-xs font-bold uppercase tracking-wider py-3 px-6 rounded-full border border-black transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Schedule Demo
-              </button>
-
-              <button 
-                onClick={() => navigateTo('home', 'contact')}
-                className="group relative bg-white hover:bg-white/80 text-black text-xs font-bold uppercase tracking-wider py-3 px-6 border border-gray-300 transition-all duration-300"
-              >
-                <span className="relative z-10 group-hover:text-blue-swiss transition-colors">Inquire</span>
-                <div className="absolute inset-0 bg-blue-swiss/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
 
             {/* Mobile Toggle */}
-            <div className="col-span-6 md:hidden flex justify-end">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-black p-2 border border-gray-300 bg-white/50 backdrop-blur-md">
+            <div className="md:hidden flex justify-end z-50">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-black p-2 rounded-full bg-white/50 backdrop-blur-md border border-white/50">
                 {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
@@ -256,28 +326,26 @@ const App: React.FC = () => {
       {/* Mobile Drawer */}
       <div className={`fixed inset-0 z-40 bg-creme transform transition-transform duration-500 md:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <GridSystem />
-        <div className="relative z-10 flex flex-col h-full justify-center px-8 space-y-8">
-          {navItems.map((item) => (
-            <button 
-              key={item.label} 
-              onClick={() => navigateTo(item.page, item.section)}
-              className="text-left text-4xl font-bold text-black uppercase tracking-tighter hover:text-blue-swiss transition-colors border-l-2 border-transparent hover:border-blue-swiss pl-4"
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="relative z-10 flex flex-col h-full justify-center px-8 space-y-6">
+          <button onClick={() => navigateTo('home', 'about')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">Company</button>
+          
+          <div className="py-2 border-l-2 border-gray-200 pl-4 space-y-4">
+             <div className="text-xs font-mono text-gray-400 uppercase tracking-widest">Products</div>
+             <button onClick={() => navigateTo('whatsapp-automation')} className="block text-left text-2xl font-bold text-black uppercase tracking-tighter">WhatsApp Auto</button>
+             <button onClick={() => navigateTo('ai-chatbots')} className="block text-left text-2xl font-bold text-black uppercase tracking-tighter">AI Chatbot</button>
+             <button onClick={() => navigateTo('digital-experience')} className="block text-left text-2xl font-bold text-black uppercase tracking-tighter">Digital Exp</button>
+          </div>
+
+          <button onClick={() => navigateTo('ai-agents')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">AI Agents</button>
+          <button onClick={() => navigateTo('aaas')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">AaaS</button>
+          <button onClick={() => navigateTo('home', 'contact')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">Contact</button>
           
           <button 
               onClick={() => navigateTo('schedule-demo')}
-              className="text-left text-4xl font-bold text-black uppercase tracking-tighter hover:text-blue-swiss transition-colors border-l-2 border-transparent hover:border-blue-swiss pl-4"
+              className="text-left text-3xl font-bold text-blue-swiss uppercase tracking-tighter mt-4"
           >
               Schedule Demo
           </button>
-
-          <div className="pt-12">
-             <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-2">Current Time ({locationLabel.split(' ')[0]})</div>
-             <div className="text-xl font-mono text-blue-swiss">{time}</div>
-          </div>
         </div>
       </div>
 
@@ -286,6 +354,10 @@ const App: React.FC = () => {
           <AIAgentsPage onScheduleDemo={() => navigateTo('schedule-demo')} />
         ) : activePage === 'ai-chatbots' ? (
           <AIChatbotsPage />
+        ) : activePage === 'whatsapp-automation' ? (
+          <WhatsAppAutomationPage onScheduleDemo={() => navigateTo('schedule-demo')} />
+        ) : activePage === 'digital-experience' ? (
+          <DigitalExperiencePage onScheduleDemo={() => navigateTo('schedule-demo')} />
         ) : activePage === 'aaas' ? (
           <AaaSPage />
         ) : activePage === 'schedule-demo' ? (
@@ -518,7 +590,7 @@ const App: React.FC = () => {
                     
                     {/* Left Empty -> VISUAL */}
                     <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 text-gray-300 group-hover:text-black">
-                        <Globe2 className="w-64 h-64 stroke-[0.5]" />
+                        <Globe className="w-64 h-64 stroke-[0.5]" />
                     </div>
                     
                     {/* Right Content */}

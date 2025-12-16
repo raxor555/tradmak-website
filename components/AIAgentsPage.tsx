@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Cpu, Search, Network, ShieldCheck, FileText, BarChart, Users, Layers, Database, Lock, MessageCircle, ArrowLeft, ArrowRight, Smartphone } from 'lucide-react';
+import { Bot, Cpu, Search, FileText, Layers, Database, Lock, ArrowLeft, ArrowRight, ShoppingBag, Truck } from 'lucide-react';
 import { SwissGrid, Section, SectionHeadline, HeroHeadline, MonoLabel, BodyText, SectionNumber, ButtonPrimary, ButtonOutline } from './UI';
 
 // Terminal Data
@@ -22,18 +22,6 @@ const TERMINAL_LINES = [
 // Agent Templates Data
 const AGENTS = [
   {
-    id: "nexus",
-    name: "Nexus",
-    role: "WhatsApp Trade Concierge",
-    desc: "Automated B2B communication on WhatsApp. Handles quote requests, order status updates, and document retrieval via natural language interface.",
-    version: "v1.2.0",
-    stat: "24/7 Availability",
-    icon: Smartphone,
-    color: "text-green-600",
-    bgColor: "bg-green-500/10",
-    borderColor: "border-green-500/20"
-  },
-  {
     id: "vesta",
     name: "Vesta",
     role: "Sourcing & Procurement",
@@ -46,25 +34,25 @@ const AGENTS = [
     borderColor: "border-blue-swiss/20"
   },
   {
-    id: "mercury",
-    name: "Mercury",
-    role: "Logistics & Arbitration",
-    desc: "Optimizes multi-modal shipping routes dynamically. Predicts port congestion and re-routes shipments instantly. Handles freight arbitration.",
-    version: "v2.1.0",
-    stat: "-14% Transit Time",
-    icon: Network,
-    color: "text-purple-accent",
-    bgColor: "bg-purple-accent/10",
-    borderColor: "border-purple-accent/20"
+    id: "aura",
+    name: "Aura",
+    role: "Smart Retail",
+    desc: "Omnichannel retail intelligence. Predicts consumer demand trends to automate inventory distribution and replenishment across physical and digital stores.",
+    version: "v1.8.2",
+    stat: "+22% Turnover",
+    icon: ShoppingBag,
+    color: "text-green-600",
+    bgColor: "bg-green-500/10",
+    borderColor: "border-green-500/20"
   },
   {
-    id: "janus",
-    name: "Janus",
-    role: "Risk & Compliance",
-    desc: "Ensures trade compliance across 140+ jurisdictions. Validates HS codes, sanctions lists, and automates letter of credit documentation.",
-    version: "v4.0.2",
-    stat: "ISO 27001",
-    icon: ShieldCheck,
+    id: "helios",
+    name: "Helios",
+    role: "Global Logistics",
+    desc: "Autonomous fleet coordination and route optimization. Monitors port congestion, customs clearance, and last-mile delivery status in real-time.",
+    version: "v2.5.0",
+    stat: "-18% Logistics Cost",
+    icon: Truck,
     color: "text-orange-500",
     bgColor: "bg-orange-500/10",
     borderColor: "border-orange-500/20"
@@ -80,30 +68,6 @@ const AGENTS = [
     color: "text-gray-700",
     bgColor: "bg-gray-500/10",
     borderColor: "border-gray-500/20"
-  },
-  {
-    id: "orion",
-    name: "Orion",
-    role: "Predictive Forecasting",
-    desc: "Analyzes historical trade data against micro-economic indicators to forecast demand surges and supply shortages.",
-    version: "v2.8.4",
-    stat: "94% Precision",
-    icon: BarChart,
-    color: "text-indigo-500",
-    bgColor: "bg-indigo-500/10",
-    borderColor: "border-indigo-500/20"
-  },
-  {
-    id: "vulcan",
-    name: "Vulcan",
-    role: "Supplier Negotiation",
-    desc: "Autonomous negotiation agent for tail-spend procurement. Engages with suppliers to secure optimal pricing within guardrails.",
-    version: "v1.5.0",
-    stat: "+12% Savings",
-    icon: Users,
-    color: "text-red-500",
-    bgColor: "bg-red-500/10",
-    borderColor: "border-red-500/20"
   }
 ];
 
@@ -318,7 +282,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                  <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/70 to-white/40 backdrop-blur-xl border border-white/60 shadow-lg rounded-xl transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-swiss/30 overflow-hidden">
                     
                     {/* Shader / Gradient Blob Effect */}
-                    <div className={`absolute -top-20 -right-20 w-60 h-60 rounded-full blur-[80px] opacity-40 transition-all duration-700 group-hover:scale-150 ${agent.id === 'nexus' ? 'bg-green-400' : 'bg-blue-swiss'}`}></div>
+                    <div className={`absolute -top-20 -right-20 w-60 h-60 rounded-full blur-[80px] opacity-40 transition-all duration-700 group-hover:scale-150 ${agent.id === 'vesta' ? 'bg-blue-swiss' : agent.id === 'aura' ? 'bg-green-400' : agent.id === 'helios' ? 'bg-orange-400' : 'bg-gray-400'}`}></div>
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50 group-hover:via-blue-swiss group-hover:opacity-100 transition-all duration-500"></div>
 
                     <div className="relative p-8 h-full flex flex-col justify-between z-10">
@@ -359,7 +323,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
           <div className="mt-12 w-full h-1 bg-gray-200 rounded-full overflow-hidden">
              <div 
                className="h-full bg-black transition-all duration-500 ease-out"
-               style={{ width: `${((startIndex + 1) / (AGENTS.length - itemsPerPage + 1)) * 100}%` }} // Simplified progress calc
+               style={{ width: `${((startIndex + itemsPerPage) / AGENTS.length) * 100}%` }}
              ></div>
           </div>
         </div>

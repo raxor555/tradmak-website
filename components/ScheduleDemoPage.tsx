@@ -8,7 +8,11 @@ export const ScheduleDemoPage: React.FC = () => {
       const cal = await getCalApi({"namespace":"tradmak-gtm-team"});
       cal("ui", {
         "theme":"light",
-        "cssVarsPerTheme":{"light":{"cal-brand":"#000000"}},
+        "cssVarsPerTheme":{
+          "light":{"cal-brand":"#000000"},
+          // Added dark theme property to satisfy Record<Theme, ...> type requirement
+          "dark":{"cal-brand":"#000000"}
+        },
         "hideEventTypeDetails":false,
         "layout":"month_view"
       });
@@ -29,9 +33,12 @@ export const ScheduleDemoPage: React.FC = () => {
             <div className="col-span-12 lg:col-span-7 h-[700px] bg-white border border-gray-200 shadow-xl overflow-hidden relative rounded-sm">
                  <Cal 
                     namespace="tradmak-gtm-team"
-                    calLink="tradmak-gtm-team/tradmak-gtm-team"
+                    calLink="team/tradmak-gtm-team/tradmak-gtm-team"
                     style={{width:"100%",height:"100%",overflow:"scroll"}}
-                    config={{"layout":"month_view","theme":"light"}}
+                    config={{
+                        "layout":"month_view",
+                        "theme":"light"
+                    }}
                   />
             </div>
          </SwissGrid>
