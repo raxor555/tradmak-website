@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Cpu, Search, FileText, Layers, Database, Lock, ArrowLeft, ArrowRight, ShoppingBag, Truck } from 'lucide-react';
+import { Bot, Cpu, Search, FileText, Layers, Database, Lock, ArrowLeft, ArrowRight, ShoppingBag, Truck, Sparkles } from 'lucide-react';
 import { SwissGrid, Section, SectionHeadline, HeroHeadline, MonoLabel, BodyText, SectionNumber, ButtonPrimary, ButtonOutline } from './UI';
 
 // Terminal Data
@@ -68,6 +68,18 @@ const AGENTS = [
     color: "text-gray-700",
     bgColor: "bg-gray-500/10",
     borderColor: "border-gray-500/20"
+  },
+  {
+    id: "iris",
+    name: "Iris",
+    role: "Beauty & Personal Care",
+    desc: "Predicts viral beauty trends using social listening. Optimizes inventory for high-velocity SKUs like skincare actives and seasonal cosmetics.",
+    version: "v4.2.0",
+    stat: "+45% Sell-Through",
+    icon: Sparkles,
+    color: "text-pink-500",
+    bgColor: "bg-pink-500/10",
+    borderColor: "border-pink-500/20"
   }
 ];
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, ArrowUp, ChevronDown, Cpu, MessageSquare, Zap, Globe, Clock, Box, Layers, BrainCircuit, BarChart3, Monitor } from 'lucide-react';
+import { Menu, X, ArrowRight, ArrowUp, ChevronDown, Cpu, MessageSquare, Zap, Globe, Clock, Box, Layers, BrainCircuit, BarChart3, Monitor, CheckCircle } from 'lucide-react';
 import { 
   GridSystem, SwissGrid, Section, HeroHeadline, SectionHeadline, SubHeadline, 
   BodyText, MonoLabel, SectionNumber, 
@@ -13,6 +13,7 @@ import { WhatsAppAutomationPage } from './components/WhatsAppAutomationPage';
 import { DigitalExperiencePage } from './components/DigitalExperiencePage';
 import { ScheduleDemoPage } from './components/ScheduleDemoPage';
 import { Footer } from './components/Footer';
+import ChatWidget from './components/Chatbot';
 
 interface FadeInItemProps {
   children: React.ReactNode;
@@ -69,9 +70,35 @@ const App: React.FC = () => {
   // Routing State
   const [activePage, setActivePage] = useState<PageType>('home');
   
+  // Handle Hash-based Routing
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#/', '');
+      const validPages: PageType[] = ['home', 'ai-agents', 'ai-chatbots', 'whatsapp-automation', 'aaas', 'digital-experience', 'schedule-demo'];
+      
+      if (hash && validPages.includes(hash as PageType)) {
+        setActivePage(hash as PageType);
+      } else if (!hash) {
+        setActivePage('home');
+      }
+      
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    // Initial check
+    handleHashChange();
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   // Typing animation state
   const [typingText, setTypingText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Contact Form State
+  const [formData, setFormData] = useState({ fname: '', lname: '', email: '', message: '' });
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -160,25 +187,47 @@ const App: React.FC = () => {
     setMobileMenuOpen(false);
     setProductsDropdownOpen(false);
     
-    if (page !== activePage) {
-      setActivePage(page);
-      // Wait for render then scroll
-      setTimeout(() => {
-        if (sectionId) {
-          const el = document.getElementById(sectionId);
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          window.scrollTo(0, 0);
-        }
-      }, 100);
+    // Update the URL hash which will trigger our hashchange listener
+    const newHash = page === 'home' ? '' : `#/${page}`;
+    
+    if (window.location.hash !== newHash) {
+      window.location.hash = newHash;
+    } else if (sectionId) {
+      // If we're already on that page but want to scroll to a section
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     } else {
-      // Same page navigation
-      if (sectionId) {
-        const el = document.getElementById(sectionId);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus('submitting');
+    
+    try {
+      const response = await fetch('https://n8n.srv1040836.hstgr.cloud/webhook/contact-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setFormStatus('success');
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        console.error('Webhook returned error status');
+        setFormStatus('error');
       }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setFormStatus('error');
     }
   };
 
@@ -211,7 +260,7 @@ const App: React.FC = () => {
                 {/* Nav Items with rounded hover effect */}
                 <button 
                   onClick={() => navigateTo('home', 'about')}
-                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                  className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${activePage === 'home' ? 'text-blue-swiss bg-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
                 >
                   Company
                 </button>
@@ -276,14 +325,14 @@ const App: React.FC = () => {
 
                 <button 
                   onClick={() => navigateTo('ai-agents')}
-                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                  className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${activePage === 'ai-agents' ? 'text-blue-swiss bg-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
                 >
                   AI Agents
                 </button>
 
                 <button 
                   onClick={() => navigateTo('aaas')}
-                  className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
+                  className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${activePage === 'aaas' ? 'text-blue-swiss bg-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
                 >
                   AaaS
                 </button>
@@ -392,7 +441,7 @@ const App: React.FC = () => {
                     {/* Status Pill */}
                     <div className="inline-flex items-center gap-3 mb-6">
                       <div className="h-[1px] w-8 bg-blue-swiss"></div>
-                      <span className="text-[10px] font-mono text-blue-swiss uppercase tracking-widest">Next Gen Logistics</span>
+                      <span className="text-[10px] font-mono text-blue-swiss uppercase tracking-widest">Next Gen Automation</span>
                     </div>
 
                     {/* Headline */}
@@ -438,7 +487,7 @@ const App: React.FC = () => {
                           </div>
                           <div>
                             <div className="text-[9px] font-mono text-blue-swiss uppercase tracking-widest mb-0.5">Trade OS v2.4</div>
-                            <div className="text-lg font-bold text-black tracking-tight">Supply Chain AI</div>
+                            <div className="text-lg font-bold text-black tracking-tight">Global Trade AI</div>
                           </div>
                         </div>
                         <div className="text-right">
@@ -513,9 +562,9 @@ const App: React.FC = () => {
                     <p className="text-2xl md:text-3xl lg:text-4xl text-black font-light leading-snug tracking-tight mb-8">
                       We envision a dynamic ecosystem where technology accelerates trade efficiency, sustainability, and inclusivity.
                     </p>
-                    <BodyText className="max-w-3xl text-gray-600">
+                    <p className="text-base md:text-lg text-gray-600 leading-relaxed font-normal max-w-3xl">
                       TradMAK leads in industrial B2B business optimization. We don't just move goods; we engineer the flow of international commerce using lean methodologies and cutting-edge SaaS infrastructure to mitigate fragmentation risks.
-                    </BodyText>
+                    </p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-300 pt-8">
@@ -723,24 +772,76 @@ const App: React.FC = () => {
                       <div className="flex justify-between items-center mb-10">
                         <h3 className="text-2xl font-bold text-black">INQUIRY FORM</h3>
                         <div className="flex items-center gap-2">
-                          <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-[10px] font-mono text-green-600 uppercase tracking-widest">Online</span>
+                          <div className={`h-2 w-2 rounded-full ${formStatus === 'submitting' ? 'bg-yellow-500' : 'bg-green-500'} animate-pulse`}></div>
+                          <span className={`text-[10px] font-mono ${formStatus === 'submitting' ? 'text-yellow-600' : 'text-green-600'} uppercase tracking-widest`}>
+                            {formStatus === 'submitting' ? 'Sending...' : 'Online'}
+                          </span>
                         </div>
                       </div>
-                      <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+                      <form className="space-y-8" onSubmit={handleFormSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                          <Input label="First Name" id="fname" type="text" placeholder="John" className="h-16 text-lg px-2" />
-                          <Input label="Last Name" id="lname" type="text" placeholder="Doe" className="h-16 text-lg px-2" />
+                          <Input 
+                            label="First Name" 
+                            id="fname" 
+                            type="text" 
+                            placeholder="John" 
+                            className="h-16 text-lg px-2"
+                            value={formData.fname}
+                            onChange={handleInputChange}
+                            disabled={formStatus === 'submitting' || formStatus === 'success'}
+                          />
+                          <Input 
+                            label="Last Name" 
+                            id="lname" 
+                            type="text" 
+                            placeholder="Doe" 
+                            className="h-16 text-lg px-2"
+                            value={formData.lname}
+                            onChange={handleInputChange}
+                            disabled={formStatus === 'submitting' || formStatus === 'success'}
+                          />
                         </div>
-                        <Input label="Corporate Email" id="email" type="email" placeholder="john@company.com" required className="h-16 text-lg px-2" />
-                        <TextArea label="Message" id="message" placeholder="Details regarding your inquiry..." className="text-lg px-2 py-2" />
+                        <Input 
+                          label="Corporate Email" 
+                          id="email" 
+                          type="email" 
+                          placeholder="john@company.com" 
+                          required 
+                          className="h-16 text-lg px-2"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          disabled={formStatus === 'submitting' || formStatus === 'success'}
+                        />
+                        <TextArea 
+                          label="Message" 
+                          id="message" 
+                          placeholder="Details regarding your inquiry..." 
+                          className="text-lg px-2 py-2"
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          disabled={formStatus === 'submitting' || formStatus === 'success'}
+                        />
                         
                         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
                           <div className="flex items-center gap-2 text-gray-500">
                             <Clock size={14} />
                             <span className="text-xs">We usually reply within 24 hours.</span>
                           </div>
-                          <ButtonPrimary type="submit" className="w-full md:w-auto py-5 px-12 text-base">Submit Inquiry</ButtonPrimary>
+                          <ButtonPrimary 
+                            type="submit" 
+                            className={`w-full md:w-auto py-5 px-12 text-base ${formStatus === 'success' ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                            disabled={formStatus === 'submitting' || formStatus === 'success'}
+                          >
+                             {formStatus === 'submitting' ? (
+                               'Submitting...'
+                             ) : formStatus === 'success' ? (
+                               <>
+                                 <CheckCircle size={18} /> Your form has been submitted
+                               </>
+                             ) : (
+                               'Submit Inquiry'
+                             )}
+                          </ButtonPrimary>
                         </div>
                       </form>
                   </Card>
@@ -752,7 +853,7 @@ const App: React.FC = () => {
 
         <Footer />
         
-        {/* Back to Top Button */}
+        {/* Back to Top Button - Standard right side positioning */}
         <button
           onClick={scrollToTop}
           className={`fixed bottom-8 right-8 z-50 p-4 bg-black text-white border border-black shadow-lg transition-all duration-500 transform hover:bg-blue-swiss hover:border-blue-swiss hover:-translate-y-1 ${showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}
@@ -760,6 +861,9 @@ const App: React.FC = () => {
         >
           <ArrowUp size={20} />
         </button>
+
+        {/* Global Floating Chatbot */}
+        <ChatWidget />
       </main>
     </div>
   );

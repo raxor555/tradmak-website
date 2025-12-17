@@ -81,10 +81,12 @@ export const ButtonPrimary: React.FC<{
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
-}> = ({ children, onClick, className = '', type = 'button' }) => (
+  disabled?: boolean;
+}> = ({ children, onClick, className = '', type = 'button', disabled = false }) => (
   <button
     type={type}
     onClick={onClick}
+    disabled={disabled}
     className={`
       group relative inline-flex items-center justify-center gap-3
       bg-blue-swiss text-white font-bold text-sm
@@ -92,14 +94,15 @@ export const ButtonPrimary: React.FC<{
       transition-all duration-300 ease-out
       hover:bg-blue-bright shadow-lg hover:shadow-blue-swiss/20
       focus:outline-none focus:ring-2 focus:ring-blue-swiss focus:ring-offset-2 focus:ring-offset-creme
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-swiss disabled:shadow-none
       ${className}
     `}
   >
     <span className="relative z-10 flex items-center gap-2">
       {children}
     </span>
-    {/* Hover slide effect */}
-    <div className="absolute inset-0 bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+    {/* Hover slide effect - disabled when button is disabled */}
+    {!disabled && <div className="absolute inset-0 bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>}
   </button>
 );
 
@@ -166,6 +169,7 @@ export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { lab
         text-black font-sans text-lg
         focus:border-blue-swiss focus:outline-none
         placeholder-gray-400 transition-all duration-300
+        disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
       `}
       {...props}
@@ -188,6 +192,7 @@ export const TextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement
         text-black font-sans text-lg
         focus:border-blue-swiss focus:outline-none
         placeholder-gray-400 transition-all duration-300 resize-none
+        disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
       `}
       {...props}
