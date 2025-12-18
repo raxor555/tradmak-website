@@ -734,7 +734,7 @@ const App: React.FC = () => {
                   ))}
                 </div>
               </SwissGrid>
-            </Section>
+            </section>
 
             {/* --- CONTACT & FOOTER --- */}
             <Section id="contact" className="bg-white pb-0 border-b-0">
@@ -760,9 +760,6 @@ const App: React.FC = () => {
                           Dubai Silicon Oasis<br/>
                           Dubai, UAE
                         </address>
-                    </div>
-                    <div className="border-l border-gray-300 pl-6 group hover:border-blue-swiss transition-colors">
-                        <TextLink href="https://wa.me/1234567890">WhatsApp Direct</TextLink>
                     </div>
                   </div>
                 </div>

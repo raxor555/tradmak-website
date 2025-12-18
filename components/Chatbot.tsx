@@ -312,8 +312,8 @@ const ChatWidget: React.FC = () => {
               setTimeout(() => {
                 introContainer.style.display = 'none';
                 displayInitialMessage();
-              }, 600); // Reduced time as requested
-            }, 1800); // Faster intro transition
+              }, 600); 
+            }, 1800); 
           }, 100);
         }
       } else {
@@ -334,6 +334,7 @@ const ChatWidget: React.FC = () => {
       if (!sendButton || !chatMessages || !sessionActive) return;
       sendButton.disabled = true;
 
+      // Ensure typing indicator is added and visible
       const typingIndicator = document.createElement('div');
       typingIndicator.className = 'typing-indicator-swiss';
       typingIndicator.innerHTML = `<span></span><span></span><span></span>`;
@@ -344,33 +345,61 @@ const ChatWidget: React.FC = () => {
         const webhookUrl = selectedLanguage === 'ar' ? WEBHOOK_URL_AR : WEBHOOK_URL_EN;
         const response = await fetch(webhookUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({
             message,
             session_id: SESSION_ID,
             user_ip: userIP,
             language: selectedLanguage,
             user_name: userData.name,
-            user_email: userData.email
+            user_email: userData.email,
+            user_phone: userData.phone
           })
         });
 
-        const data = await response.json();
+        if (!response.ok) {
+           throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Handle text response to avoid "Unexpected token 'H'" JSON parse error
+        const responseText = await response.text();
+        let out = "";
+        
+        try {
+          const rawData = JSON.parse(responseText);
+          // n8n often returns an array [ { ... } ]
+          const data = Array.isArray(rawData) ? rawData[0] : rawData;
+          // Robust data extraction from object
+          out = data?.output || data?.response || data?.text || data?.message || data?.data || responseText;
+        } catch (e) {
+          // If not JSON, use the raw response text directly
+          out = responseText || (selectedLanguage === 'ar' ? "يقوم وكيل ترادماك بالمعالجة... سيتابع المتخصصون لدينا قريباً." : "TradMAK agent processing... Our trade specialists will follow up shortly.");
+        }
+        
+        // Remove typing indicator once data is received
         typingIndicator.remove();
+        
         if (!sessionActive) return;
 
         const botReply = document.createElement('div');
         botReply.className = 'bot-message';
         chatMessages.appendChild(botReply);
-
-        const out = data.output || data.response || data.message || "TradMAK agent processing... Our trade specialists will follow up shortly.";
+        
         typeWriter(botReply, out, 25, () => addTimestamp(botReply));
         smoothScrollToBottom();
       } catch (error) {
+        console.error('Webhook Fetch Error:', error);
         typingIndicator.remove();
         const err = document.createElement('div');
         err.className = 'system-error-msg';
-        err.textContent = "Communication Link Failed. Retrying...";
+        err.style.color = 'red';
+        err.style.fontSize = '11px';
+        err.style.padding = '10px';
+        err.textContent = selectedLanguage === 'ar' 
+          ? "فشل الاتصال. يرجى المحاولة مرة أخرى." 
+          : "Communication Link Failed. Please try again.";
         chatMessages.appendChild(err);
         smoothScrollToBottom();
       } finally {
@@ -850,7 +879,6 @@ const ChatWidget: React.FC = () => {
             </div>
             
             <div className="header-actions-v2">
-              {/* Swapped order: Close then Minimize */}
               <button className="action-btn-v2" id="endChatButton" title="Close Session">✕</button>
               <button className="action-btn-v2" id="minimizeButton" title="Minimize">▼</button>
             </div>
