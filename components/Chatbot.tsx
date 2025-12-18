@@ -70,24 +70,54 @@ const ChatWidget: React.FC = () => {
       introGif.src = `https://via.placeholder.com/400x600/00A4DA/FFFFFF?text=TRADMAK+INTELLIGENCE`;
     }
 
-    function typeWriter(element: HTMLElement, text: string, speed = 25, onFinish: (() => void) | null = null) {
-      let i = 0;
-      const cursorSpan = document.createElement('span');
-      cursorSpan.className = 'typing-cursor';
-      element.appendChild(cursorSpan);
+    /**
+     * Converts markdown-like syntax into HTML
+     * **bold** -> <b>bold</b>
+     * [text](url) -> <a href="url">text</a>
+     * naked urls -> <a href="url">url</a>
+     */
+    function formatMessage(text: string): string {
+      let formatted = text
+        // Bold: **text**
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        // Markdown Links: [text](url)
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-link">$1</a>')
+        // Naked URLs (that aren't already part of an a tag)
+        .replace(/(?<!href=")(?<!">)(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="chat-link">$1</a>')
+        // Line breaks
+        .replace(/\n/g, '<br>');
+      
+      return formatted;
+    }
 
+    /**
+     * Enhanced typewriter that handles HTML tags
+     */
+    function typeWriter(element: HTMLElement, html: string, speed = 15, onFinish: (() => void) | null = null) {
+      let i = 0;
+      let currentHtml = "";
+      
       function type() {
-        if (i < text.length) {
-          if (text.charAt(i) === '\n') {
-            element.insertBefore(document.createElement('br'), cursorSpan);
-          } else {
-            const textNode = document.createTextNode(text.charAt(i));
-            element.insertBefore(textNode, cursorSpan);
+        if (i < html.length) {
+          if (html[i] === '<') {
+            // Find the end of the tag and append it instantly
+            let tagEnd = html.indexOf('>', i);
+            if (tagEnd !== -1) {
+              currentHtml += html.slice(i, tagEnd + 1);
+              i = tagEnd + 1;
+              // Continue immediately without delay for the tag itself
+              type();
+              return;
+            }
           }
+          
+          currentHtml += html[i];
           i++;
+          element.innerHTML = currentHtml + '<span class="typing-cursor"></span>';
+          smoothScrollToBottom();
           setTimeout(type, speed);
         } else {
-          cursorSpan.remove();
+          element.innerHTML = currentHtml; // Remove cursor
           if (onFinish) onFinish();
         }
       }
@@ -158,7 +188,7 @@ const ChatWidget: React.FC = () => {
       botMsg.className = 'bot-message';
       chatMessages.appendChild(botMsg);
       const welcomeText = "Welcome to TradMAK Ecosystem. Select a language to initiate the neural link:";
-      typeWriter(botMsg, welcomeText, 25, () => {
+      typeWriter(botMsg, formatMessage(welcomeText), 20, () => {
         addTimestamp(botMsg);
         setTimeout(() => showLanguageSelection(), 500);
       });
@@ -286,10 +316,10 @@ const ChatWidget: React.FC = () => {
       chatMessages.appendChild(botMsg);
 
       const welcomeText = selectedLanguage === 'ar'
-        ? `أهلاً بك ${userData.name}. تم إنشاء الرابط العصبي بنجاح. كيف يمكن لترادماك مساعدتك اليوم؟`
-        : `Welcome ${userData.name}. Neural link established. How can TradMAK assist your trade workflow today?`;
+        ? `أهلاً بك **${userData.name}**. تم إنشاء الرابط العصبي بنجاح. كيف يمكن لترادماك مساعدتك اليوم؟`
+        : `Welcome **${userData.name}**. Neural link established. How can TradMAK assist your trade workflow today?`;
 
-      typeWriter(botMsg, welcomeText, 25, () => {
+      typeWriter(botMsg, formatMessage(welcomeText), 20, () => {
         addTimestamp(botMsg);
       });
       smoothScrollToBottom();
@@ -363,22 +393,17 @@ const ChatWidget: React.FC = () => {
            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // Handle text response to avoid "Unexpected token 'H'" JSON parse error
         const responseText = await response.text();
         let out = "";
         
         try {
           const rawData = JSON.parse(responseText);
-          // n8n often returns an array [ { ... } ]
           const data = Array.isArray(rawData) ? rawData[0] : rawData;
-          // Robust data extraction from object
           out = data?.output || data?.response || data?.text || data?.message || data?.data || responseText;
         } catch (e) {
-          // If not JSON, use the raw response text directly
           out = responseText || (selectedLanguage === 'ar' ? "يقوم وكيل ترادماك بالمعالجة... سيتابع المتخصصون لدينا قريباً." : "TradMAK agent processing... Our trade specialists will follow up shortly.");
         }
         
-        // Remove typing indicator once data is received
         typingIndicator.remove();
         
         if (!sessionActive) return;
@@ -387,7 +412,7 @@ const ChatWidget: React.FC = () => {
         botReply.className = 'bot-message';
         chatMessages.appendChild(botReply);
         
-        typeWriter(botReply, out, 25, () => addTimestamp(botReply));
+        typeWriter(botReply, formatMessage(out), 15, () => addTimestamp(botReply));
         smoothScrollToBottom();
       } catch (error) {
         console.error('Webhook Fetch Error:', error);
@@ -514,7 +539,7 @@ const ChatWidget: React.FC = () => {
           transform: translateY(0);
         }
 
-        /* Blue Header - Aligned with Website Colors */
+        /* Blue Header */
         .chat-header-v2 {
           position: sticky;
           top: 0;
@@ -633,6 +658,17 @@ const ChatWidget: React.FC = () => {
           border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
+        .chat-link {
+          color: var(--swiss-blue);
+          text-decoration: underline;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+
+        .chat-link:hover {
+          color: var(--swiss-blue-bright);
+        }
+
         .user-message {
           align-self: flex-end;
           max-width: 85%;
@@ -679,6 +715,20 @@ const ChatWidget: React.FC = () => {
         @keyframes swiss-bounce {
           0%, 80%, 100% { transform: scale(0); }
           40% { transform: scale(1.0); }
+        }
+
+        .typing-cursor {
+          display: inline-block;
+          width: 2px;
+          height: 14px;
+          background: var(--swiss-blue);
+          margin-left: 2px;
+          animation: blink 1s step-end infinite;
+          vertical-align: middle;
+        }
+
+        @keyframes blink {
+          50% { opacity: 0; }
         }
 
         /* Lead Form Overlay */
