@@ -850,10 +850,10 @@ const App: React.FC = () => {
 
         <Footer />
         
-        {/* Back to Top Button - Standard right side positioning */}
+        {/* Back to Top Button - Positioned on the opposite side (Left) */}
         <button
           onClick={scrollToTop}
-          className={`fixed bottom-8 right-8 z-50 p-4 bg-black text-white border border-black shadow-lg transition-all duration-500 transform hover:bg-blue-swiss hover:border-blue-swiss hover:-translate-y-1 ${showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}
+          className={`fixed bottom-8 left-8 z-50 p-4 bg-black text-white border border-black shadow-lg transition-all duration-500 transform hover:bg-blue-swiss hover:border-blue-swiss hover:-translate-y-1 ${showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}
           aria-label="Back to top"
         >
           <ArrowUp size={20} />
