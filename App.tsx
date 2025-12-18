@@ -734,7 +734,7 @@ const App: React.FC = () => {
                   ))}
                 </div>
               </SwissGrid>
-            </section>
+            </Section>
 
             {/* --- CONTACT & FOOTER --- */}
             <Section id="contact" className="bg-white pb-0 border-b-0">
