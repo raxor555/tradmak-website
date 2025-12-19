@@ -136,11 +136,14 @@ const App: React.FC = () => {
   useEffect(() => {
     if (activePage === 'home' && recaptchaRef.current && (window as any).grecaptcha) {
       try {
-        (window as any).grecaptcha.render(recaptchaRef.current, {
-          sitekey: '6LfRWTAsAAAAAOZmxRFgahi0R4eq8d3EP_xKdgt8',
-          callback: (token: string) => setCaptchaToken(token),
-          'expired-callback': () => setCaptchaToken(null)
-        });
+        // Clear previous widget if any
+        if (recaptchaRef.current.innerHTML === '') {
+          (window as any).grecaptcha.render(recaptchaRef.current, {
+            sitekey: '6LfRWTAsAAAAAOZmxRFgahi0R4eq8d3EP_xKdgt8',
+            callback: (token: string) => setCaptchaToken(token),
+            'expired-callback': () => setCaptchaToken(null)
+          });
+        }
       } catch (e) {
         console.warn("reCAPTCHA rendering issue:", e);
       }
@@ -388,13 +391,6 @@ const App: React.FC = () => {
                 </button>
                 
                 <button 
-                  onClick={() => navigateTo('blog')}
-                  className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${activePage === 'blog' ? 'text-blue-swiss bg-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
-                >
-                  Blog
-                </button>
-                
-                <button 
                   onClick={() => navigateTo('home', 'contact')}
                   className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
                 >
@@ -441,7 +437,6 @@ const App: React.FC = () => {
 
           <button onClick={() => navigateTo('ai-agents')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">AI Agents</button>
           <button onClick={() => navigateTo('aaas')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">AaaS</button>
-          <button onClick={() => navigateTo('blog')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">Blog</button>
           <button onClick={() => navigateTo('home', 'contact')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">Contact</button>
           
           <button 
@@ -822,8 +817,8 @@ const App: React.FC = () => {
                         />
                         
                         <div className="space-y-4">
-                           <label className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block">Security Verification</label>
-                           <div ref={recaptchaRef} className="g-recaptcha" data-sitekey="6LfRWTAsAAAAAOZmxRFgahi0R4eq8d3EP_xKdgt8"></div>
+                           <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Security Verification</label>
+                           <div ref={recaptchaRef} className="g-recaptcha"></div>
                         </div>
 
                         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
