@@ -335,16 +335,14 @@ const ChatWidget: React.FC = () => {
         if (introContainer) {
           introContainer.style.display = 'flex';
           loadGif();
+          // 5-second display duration (5000ms)
           setTimeout(() => {
-            introContainer.classList.add('active');
+            introContainer.classList.add('fade-out');
             setTimeout(() => {
-              introContainer.classList.add('fade-out');
-              setTimeout(() => {
-                introContainer.style.display = 'none';
-                displayInitialMessage();
-              }, 600); 
-            }, 1800); 
-          }, 100);
+              introContainer.style.display = 'none';
+              displayInitialMessage();
+            }, 600); // 0.6s fade-out duration
+          }, 5000); // 5 seconds total display time
         }
       } else {
         if (!languageSelected && !initialMessageDisplayed) displayInitialMessage();
