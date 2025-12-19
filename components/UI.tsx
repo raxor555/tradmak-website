@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, ArrowDown, ChevronRight } from 'lucide-react';
 
@@ -154,7 +155,8 @@ export const TextLink: React.FC<{
 
 // --- Form Elements ---
 
-export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label: string }> = ({ label, id, className = '', ...props }) => (
+// Updated Input component to support optional icons
+export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label: string; icon?: React.ReactNode }> = ({ label, id, className = '', icon, ...props }) => (
   <div className="w-full group">
     <div className="flex justify-between mb-3">
       <label htmlFor={id} className="text-xs font-mono text-gray-500 uppercase tracking-wider group-focus-within:text-blue-swiss transition-colors">
@@ -162,18 +164,61 @@ export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { lab
       </label>
       <div className="w-1 h-1 bg-gray-300 group-focus-within:bg-blue-swiss transition-colors"></div>
     </div>
-    <input
-      id={id}
-      className={`
-        w-full h-14 bg-transparent border-b border-gray-300 
-        text-black font-sans text-lg
-        focus:border-blue-swiss focus:outline-none
-        placeholder-gray-400 transition-all duration-300
-        disabled:opacity-50 disabled:cursor-not-allowed
-        ${className}
-      `}
-      {...props}
-    />
+    <div className="relative flex items-center">
+      {icon && (
+        <div className="absolute left-0 text-gray-400 group-focus-within:text-blue-swiss transition-colors">
+          {icon}
+        </div>
+      )}
+      <input
+        id={id}
+        className={`
+          w-full h-14 bg-transparent border-b border-gray-300 
+          text-black font-sans text-lg
+          focus:border-blue-swiss focus:outline-none
+          placeholder-gray-400 transition-all duration-300
+          disabled:opacity-50 disabled:cursor-not-allowed
+          ${icon ? 'pl-10' : ''}
+          ${className}
+        `}
+        {...props}
+      />
+    </div>
+  </div>
+);
+
+// Added Select component
+export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; options: { label: string; value: string }[] }> = ({ label, id, className = '', options, ...props }) => (
+  <div className="w-full group">
+    <div className="flex justify-between mb-3">
+      <label htmlFor={id} className="text-xs font-mono text-gray-500 uppercase tracking-wider group-focus-within:text-blue-swiss transition-colors">
+        {label}
+      </label>
+      <div className="w-1 h-1 bg-gray-300 group-focus-within:bg-blue-swiss transition-colors"></div>
+    </div>
+    <div className="relative">
+      <select
+        id={id}
+        className={`
+          w-full h-14 bg-transparent border-b border-gray-300 
+          text-black font-sans text-lg appearance-none
+          focus:border-blue-swiss focus:outline-none
+          transition-all duration-300 cursor-pointer
+          disabled:opacity-50 disabled:cursor-not-allowed
+          ${className}
+        `}
+        {...props}
+      >
+        {options.map(opt => (
+          <option key={opt.value} value={opt.value} className="bg-white text-black py-2">
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-focus-within:text-blue-swiss transition-colors">
+        <ChevronRight className="w-5 h-5 rotate-90" />
+      </div>
+    </div>
   </div>
 );
 

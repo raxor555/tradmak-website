@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, ArrowUp, ChevronDown, Cpu, MessageSquare, Zap, Globe, Clock, Box, Layers, BrainCircuit, BarChart3, Monitor, CheckCircle } from 'lucide-react';
+import { Menu, X, ArrowRight, ArrowUp, ChevronDown, Cpu, MessageSquare, Zap, Globe, Clock, Box, Layers, BrainCircuit, BarChart3, Monitor, CheckCircle, Activity, Database, Workflow } from 'lucide-react';
 import { 
   GridSystem, SwissGrid, Section, HeroHeadline, SectionHeadline, SubHeadline, 
   BodyText, MonoLabel, SectionNumber, 
@@ -12,8 +12,13 @@ import { AaaSPage } from './components/AaaSPage';
 import { WhatsAppAutomationPage } from './components/WhatsAppAutomationPage';
 import { DigitalExperiencePage } from './components/DigitalExperiencePage';
 import { ScheduleDemoPage } from './components/ScheduleDemoPage';
+import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
+import { DataProtectionPage } from './components/DataProtectionPage';
+import { BlogPage } from './components/BlogPage';
+import { BlogPostDetailPage } from './components/BlogPostDetailPage';
 import { Footer } from './components/Footer';
 import ChatWidget from './components/Chatbot';
+import { BLOG_POSTS } from './constants/blogData';
 
 interface FadeInItemProps {
   children: React.ReactNode;
@@ -55,7 +60,7 @@ const FadeInItem: React.FC<FadeInItemProps> = ({ children, delay = 0, className 
   );
 };
 
-type PageType = 'home' | 'ai-agents' | 'ai-chatbots' | 'whatsapp-automation' | 'aaas' | 'digital-experience' | 'schedule-demo';
+type PageType = 'home' | 'ai-agents' | 'ai-chatbots' | 'whatsapp-automation' | 'aaas' | 'digital-experience' | 'schedule-demo' | 'privacy-policy' | 'data-protection' | 'blog' | 'blog-post';
 
 const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -69,28 +74,78 @@ const App: React.FC = () => {
   
   // Routing State
   const [activePage, setActivePage] = useState<PageType>('home');
+  const [activeBlogPostId, setActiveBlogPostId] = useState<string | null>(null);
+
+  // reCAPTCHA State
+  const recaptchaRef = useRef<HTMLDivElement>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   
   // Handle Hash-based Routing
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#/', '');
-      const validPages: PageType[] = ['home', 'ai-agents', 'ai-chatbots', 'whatsapp-automation', 'aaas', 'digital-experience', 'schedule-demo'];
+      let hash = window.location.hash;
       
-      if (hash && validPages.includes(hash as PageType)) {
-        setActivePage(hash as PageType);
-      } else if (!hash) {
-        setActivePage('home');
+      // Handle Blog Post Detail Pages
+      if (hash.startsWith('#/blog/')) {
+        const postId = hash.replace('#/blog/', '');
+        const postExists = BLOG_POSTS.find(p => p.id === postId);
+        if (postExists) {
+          setActivePage('blog-post');
+          setActiveBlogPostId(postId);
+          window.scrollTo(0, 0);
+          return;
+        }
       }
+
+      // Standardize the hash string
+      if (hash.startsWith('#/')) {
+        hash = hash.slice(2);
+      } else if (hash.startsWith('#')) {
+        hash = hash.slice(1);
+      } else {
+        hash = 'home';
+      }
+
+      const validPages: PageType[] = ['home', 'ai-agents', 'ai-chatbots', 'whatsapp-automation', 'aaas', 'digital-experience', 'schedule-demo', 'privacy-policy', 'data-protection', 'blog'];
       
-      window.scrollTo(0, 0);
+      if (validPages.includes(hash as PageType)) {
+        setActivePage(hash as PageType);
+        setActiveBlogPostId(null);
+        window.scrollTo(0, 0);
+      } else {
+        setActivePage('home');
+        setActiveBlogPostId(null);
+        if (hash && hash !== 'home' && hash !== '/') {
+          setTimeout(() => {
+             const el = document.getElementById(hash);
+             if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        } else {
+          window.scrollTo(0, 0);
+        }
+      }
     };
 
     window.addEventListener('hashchange', handleHashChange);
-    // Initial check
     handleHashChange();
 
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // Initialize reCAPTCHA when on home page
+  useEffect(() => {
+    if (activePage === 'home' && recaptchaRef.current && (window as any).grecaptcha) {
+      try {
+        (window as any).grecaptcha.render(recaptchaRef.current, {
+          sitekey: '6LfRWTAsAAAAAOZmxRFgahi0R4eq8d3EP_xKdgt8',
+          callback: (token: string) => setCaptchaToken(token),
+          'expired-callback': () => setCaptchaToken(null)
+        });
+      } catch (e) {
+        console.warn("reCAPTCHA rendering issue:", e);
+      }
+    }
+  }, [activePage]);
 
   // Typing animation state
   const [typingText, setTypingText] = useState("");
@@ -140,7 +195,7 @@ const App: React.FC = () => {
         setTime(d.toLocaleTimeString('en-US', options));
     };
 
-    updateTime(); // Initial update
+    updateTime(); 
     const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
   }, [userTimezone]);
@@ -150,14 +205,12 @@ const App: React.FC = () => {
     const word = "Digitalization";
     let typeSpeed = 150;
     
-    if (isDeleting) {
-      typeSpeed = 75;
-    }
+    if (isDeleting) typeSpeed = 75;
     
     if (!isDeleting && typingText === word) {
-      typeSpeed = 2000; // Pause at end before deleting
+      typeSpeed = 2000; 
     } else if (isDeleting && typingText === "") {
-      typeSpeed = 500; // Pause before starting to type again
+      typeSpeed = 500; 
     }
     
     const timer = setTimeout(() => {
@@ -183,22 +236,20 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateTo = (page: PageType, sectionId?: string) => {
+  const navigateTo = (page: PageType, param?: string) => {
     setMobileMenuOpen(false);
     setProductsDropdownOpen(false);
     
-    // Update the URL hash which will trigger our hashchange listener
-    const newHash = page === 'home' ? '' : `#/${page}`;
-    
-    if (window.location.hash !== newHash) {
-      window.location.hash = newHash;
-    } else if (sectionId) {
-      // If we're already on that page but want to scroll to a section
-      const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    let newHash = '';
+    if (page === 'home') {
+      newHash = param ? `#${param}` : '#/';
+    } else if (page === 'blog-post' && param) {
+      newHash = `#/blog/${param}`;
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      newHash = `#/${page}`;
     }
+    
+    window.location.hash = newHash;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -208,41 +259,44 @@ const App: React.FC = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaToken) {
+      alert("Please complete the security verification.");
+      return;
+    }
+
     setFormStatus('submitting');
     
     try {
       const response = await fetch('https://n8n.srv1040836.hstgr.cloud/webhook/contact-form', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          'g-recaptcha-response': captchaToken
+        }),
       });
 
       if (response.ok) {
         setFormStatus('success');
       } else {
-        console.error('Webhook returned error status');
         setFormStatus('error');
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
       setFormStatus('error');
     }
   };
 
+  const currentPost = activePage === 'blog-post' ? BLOG_POSTS.find(p => p.id === activeBlogPostId) : null;
+
   return (
     <div className="relative min-h-screen bg-creme text-black font-sans selection:bg-blue-swiss selection:text-white overflow-hidden">
       
-      {/* Background Grid Lines - Light Mode */}
       <GridSystem />
 
-      {/* --- PREMIUM HEADER --- */}
       <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'pt-2' : 'pt-6'}`}>
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
           <div className={`relative flex items-center justify-between transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-xl border border-white/50 shadow-sm rounded-full px-6 h-16' : 'h-20'}`}>
             
-            {/* Logo */}
             <div className="flex items-center gap-3 cursor-pointer z-50" onClick={() => navigateTo('home')}>
               <div className="w-8 h-8 flex items-center justify-center bg-blue-swiss border border-blue-swiss backdrop-blur-md rounded-lg shadow-lg shadow-blue-swiss/20">
                 <div className="w-3 h-3 bg-white shadow-sm rounded-sm"></div>
@@ -253,11 +307,9 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Desktop Nav - Premium Glass Pill */}
             <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <div className={`flex items-center gap-1 p-1.5 rounded-full transition-all duration-300 ${!isScrolled && 'bg-white/40 backdrop-blur-lg border border-white/40 shadow-sm hover:shadow-md hover:bg-white/60'}`}>
                 
-                {/* Nav Items with rounded hover effect */}
                 <button 
                   onClick={() => navigateTo('home', 'about')}
                   className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${activePage === 'home' ? 'text-blue-swiss bg-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
@@ -265,7 +317,6 @@ const App: React.FC = () => {
                   Company
                 </button>
 
-                {/* Products Dropdown */}
                 <div 
                   className="relative group"
                   onMouseEnter={() => setProductsDropdownOpen(true)}
@@ -277,7 +328,6 @@ const App: React.FC = () => {
                       Products <ChevronDown size={14} className={`transition-transform duration-300 ${productsDropdownOpen ? 'rotate-180' : ''}`}/>
                     </button>
 
-                    {/* Glass Dropdown Menu */}
                     <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 w-72 transition-all duration-300 origin-top ${productsDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
                        <div className="bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl rounded-2xl p-2 overflow-hidden flex flex-col gap-1">
                           
@@ -338,6 +388,13 @@ const App: React.FC = () => {
                 </button>
                 
                 <button 
+                  onClick={() => navigateTo('blog')}
+                  className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${activePage === 'blog' ? 'text-blue-swiss bg-white' : 'text-gray-600 hover:text-black hover:bg-white/90'}`}
+                >
+                  Blog
+                </button>
+                
+                <button 
                   onClick={() => navigateTo('home', 'contact')}
                   className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black hover:bg-white/90 transition-all duration-300"
                 >
@@ -347,7 +404,6 @@ const App: React.FC = () => {
               </div>
             </nav>
 
-            {/* Desktop CTA & Time */}
             <div className="hidden md:flex justify-end items-center gap-4 z-50">
               <div className={`hidden xl:block text-right mr-2 transition-opacity duration-300 ${isScrolled ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
                 <span className="block text-[10px] font-mono text-gray-400 uppercase tracking-wider">{locationLabel}</span>
@@ -362,7 +418,6 @@ const App: React.FC = () => {
               </button>
             </div>
 
-            {/* Mobile Toggle */}
             <div className="md:hidden flex justify-end z-50">
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-black p-2 rounded-full bg-white/50 backdrop-blur-md border border-white/50">
                 {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -372,7 +427,6 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
       <div className={`fixed inset-0 z-40 bg-creme transform transition-transform duration-500 md:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <GridSystem />
         <div className="relative z-10 flex flex-col h-full justify-center px-8 space-y-6">
@@ -387,6 +441,7 @@ const App: React.FC = () => {
 
           <button onClick={() => navigateTo('ai-agents')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">AI Agents</button>
           <button onClick={() => navigateTo('aaas')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">AaaS</button>
+          <button onClick={() => navigateTo('blog')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">Blog</button>
           <button onClick={() => navigateTo('home', 'contact')} className="text-left text-3xl font-bold text-black uppercase tracking-tighter">Contact</button>
           
           <button 
@@ -411,53 +466,46 @@ const App: React.FC = () => {
           <AaaSPage />
         ) : activePage === 'schedule-demo' ? (
           <ScheduleDemoPage />
+        ) : activePage === 'privacy-policy' ? (
+          <PrivacyPolicyPage />
+        ) : activePage === 'data-protection' ? (
+          <DataProtectionPage />
+        ) : activePage === 'blog' ? (
+          <BlogPage onPostClick={(id) => navigateTo('blog-post', id)} />
+        ) : activePage === 'blog-post' && currentPost ? (
+          <BlogPostDetailPage post={currentPost} onBack={() => navigateTo('blog')} />
         ) : (
           <>
-            {/* --- PREMIUM HERO SECTION --- */}
             <section id="hero" className="relative h-screen min-h-[600px] flex flex-col overflow-hidden border-b border-gray-200">
               
-              {/* Animated Shader Background (Light Mode) */}
               <div className="absolute inset-0 z-0 pointer-events-none">
-                {/* Creme base */}
                 <div className="absolute inset-0 bg-creme"></div>
-                
-                {/* Animated Blobs (Shaders) - Soft Blue and Purple Blend */}
                 <div className="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-blue-swiss/10 rounded-full blur-[120px] mix-blend-multiply animate-blob filter"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-purple-accent/10 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000 filter"></div>
                 <div className="absolute top-[40%] left-[40%] w-[400px] h-[400px] bg-blue-bright/10 rounded-full blur-[80px] mix-blend-multiply animate-blob animation-delay-4000 filter"></div>
-                
-                {/* Subtle Grid Overlay */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.3]"></div>
-                
-                {/* Vignette for depth */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(247,247,245,0.8)_100%)]"></div>
               </div>
 
               <SwissGrid className="relative z-10 h-full pointer-events-none">
-                {/* Left Content: Typography */}
                 <div className="col-span-12 lg:col-span-6 h-full flex flex-col justify-center pb-8 pointer-events-auto relative z-20">
                   <div className="animate-fade-in-up">
-                    
-                    {/* Status Pill */}
                     <div className="inline-flex items-center gap-3 mb-6">
                       <div className="h-[1px] w-8 bg-blue-swiss"></div>
                       <span className="text-[10px] font-mono text-blue-swiss uppercase tracking-widest">Next Gen Automation</span>
                     </div>
 
-                    {/* Headline */}
                     <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-black leading-[0.9] tracking-tighter uppercase font-sans mb-6">
                       Empowering <br />
                       <span className="text-transparent bg-clip-text bg-gradient-accent">Global Trade</span>
                     </h1>
                     
-                    {/* Sub-headline */}
                     <div className="flex flex-col md:flex-row items-start gap-6 mb-8 max-w-4xl">
                       <div className="text-xl md:text-2xl font-montserrat font-light text-gray-800 leading-tight">
                         through Intelligent <span className="font-semibold text-blue-swiss">{typingText}</span><span className="animate-blink text-blue-swiss">|</span>
                       </div>
                     </div>
 
-                    {/* Description & CTAs */}
                     <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-12 border-t border-gray-300 pt-6 max-w-2xl">
                       <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-lg">
                         Partnering with manufacturing leaders to optimize international supply chains through advanced digitalization and strategic foresight.
@@ -472,13 +520,10 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right Content: AI Trade Glassmorphism Component */}
                 <div className="col-span-12 lg:col-span-6 h-full flex flex-col justify-center items-end pointer-events-none md:pointer-events-auto relative z-10 hidden lg:flex">
                   <div className="w-full max-w-[420px] mr-0 animate-fade-in-right delay-200 animate-float">
                     
-                    {/* Main Glass Card (Light Mode) */}
                     <div className="relative glass-card p-6 backdrop-blur-xl border border-white/60 shadow-xl">
-                      {/* Header */}
                       <div className="flex justify-between items-start mb-5">
                         <div className="flex items-center gap-3">
                           <div className="relative p-2 bg-blue-swiss/10 border border-blue-swiss/20">
@@ -496,28 +541,17 @@ const App: React.FC = () => {
                         </div>
                       </div>
                       
-                      {/* Visualization Area: Active Route */}
                       <div className="relative h-40 mb-5 bg-white border border-gray-200 p-4 overflow-hidden">
-                        {/* Grid Background */}
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-                        
-                        {/* Connection Lines */}
                         <div className="absolute top-1/2 left-6 right-6 h-[1px] bg-gray-300"></div>
                         <div className="absolute top-1/2 left-6 right-6 h-[1px] bg-blue-swiss/50 blur-[1px] animate-pulse"></div>
-                        
-                        {/* Nodes */}
                         <div className="absolute top-1/2 left-6 w-3 h-3 bg-white border border-gray-500 rounded-full transform -translate-y-1/2 z-10"></div>
                         <div className="absolute top-1/2 right-6 w-3 h-3 bg-blue-swiss border border-blue-swiss rounded-full transform -translate-y-1/2 z-10 shadow-lg"></div>
-                        
-                        {/* Moving Packet */}
                         <div className="absolute top-1/2 left-6 w-32 h-1 bg-gradient-to-r from-transparent via-blue-swiss to-transparent transform -translate-y-1/2 animate-slide-right z-0"></div>
-
-                        {/* Floating Labels */}
                         <div className="absolute top-6 left-6 text-[9px] font-mono text-gray-500">ORIGIN: DUBAI</div>
                         <div className="absolute bottom-6 right-6 text-[9px] font-mono text-black text-right">DEST: ROTTERDAM<br/><span className="text-green-600">ETA: -2h</span></div>
                       </div>
 
-                      {/* Metrics Rows */}
                       <div className="grid grid-cols-2 gap-px bg-gray-100 border border-gray-200">
                         <div className="bg-white p-3 hover:bg-gray-50 transition-colors">
                           <div className="flex items-center gap-2 mb-1.5 text-gray-500">
@@ -536,7 +570,6 @@ const App: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Decorative Layer Underneath */}
                     <div className="absolute -z-10 top-8 -right-4 w-full h-full border border-gray-300 bg-white/40 backdrop-blur-sm"></div>
 
                   </div>
@@ -545,11 +578,8 @@ const App: React.FC = () => {
               </SwissGrid>
             </section>
 
-            {/* --- ABOUT SECTION --- */}
             <Section id="about" className="relative overflow-hidden">
-              {/* Subtle Back Glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white rounded-full blur-[120px] -z-10 pointer-events-none border border-gray-100"></div>
-
               <SectionNumber number="01" className="left-0 top-0" />
               
               <SwissGrid>
@@ -583,9 +613,7 @@ const App: React.FC = () => {
               </SwissGrid>
             </Section>
 
-            {/* --- SERVICES SECTION (TIMELINE) --- */}
             <Section id="services" className="bg-white relative">
-              
               <SectionNumber number="02" className="right-0 top-0" />
               
               <SwissGrid className="mb-24">
@@ -599,17 +627,12 @@ const App: React.FC = () => {
               </SwissGrid>
 
               <div className="relative max-w-[1400px] mx-auto px-4 md:px-12 pb-24">
-                {/* Central Line */}
                 <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 md:-translate-x-1/2"></div>
 
                 <div className="space-y-32">
                   
-                  {/* Block 1 - Left */}
                   <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
-                    {/* Anchor Point */}
                     <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-white border border-blue-swiss -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-blue-swiss group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_#F7F7F5]"></div>
-                    
-                    {/* Left Content */}
                     <div className="md:text-right md:pr-24 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-right">
                         <div className="font-mono text-8xl font-bold text-gray-100 mb-6 transition-colors duration-500 group-hover:text-blue-swiss/10">01</div>
                         <h3 className="text-4xl md:text-5xl font-bold text-black uppercase mb-6 tracking-tight">Business<br/>Optimization</h3>
@@ -625,24 +648,16 @@ const App: React.FC = () => {
                             ))}
                         </ul>
                     </div>
-                    
-                    {/* Right Empty -> VISUAL */}
                     <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 text-gray-300 group-hover:text-black">
                         <BarChart3 className="w-64 h-64 stroke-[0.5]" />
                     </div>
                   </div>
 
-                  {/* Block 2 - Right */}
                   <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
-                    {/* Anchor Point */}
                     <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-white border border-black -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-black group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_#F7F7F5]"></div>
-                    
-                    {/* Left Empty -> VISUAL */}
                     <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 text-gray-300 group-hover:text-black">
                         <Globe className="w-64 h-64 stroke-[0.5]" />
                     </div>
-                    
-                    {/* Right Content */}
                     <div className="pl-12 md:pl-24 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-left">
                         <div className="font-mono text-8xl font-bold text-gray-100 mb-6 transition-colors duration-500 group-hover:text-black/5">02</div>
                         <h3 className="text-4xl md:text-5xl font-bold text-black uppercase mb-6 tracking-tight">International<br/>Trade</h3>
@@ -660,12 +675,8 @@ const App: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Block 3 - Left */}
                   <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
-                    {/* Anchor Point */}
                     <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-white border border-blue-swiss -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-blue-swiss group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_#F7F7F5]"></div>
-                    
-                    {/* Left Content */}
                     <div className="md:text-right md:pr-24 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-right">
                         <div className="font-mono text-8xl font-bold text-gray-100 mb-6 transition-colors duration-500 group-hover:text-blue-swiss/10">03</div>
                         <h3 className="text-4xl md:text-5xl font-bold text-black uppercase mb-6 tracking-tight">Digitalization<br/>Tech</h3>
@@ -681,7 +692,6 @@ const App: React.FC = () => {
                             ))}
                         </ul>
                     </div>
-                    {/* Right Empty -> VISUAL */}
                     <div className="hidden md:flex justify-center items-center opacity-30 group-hover:opacity-100 transition-opacity duration-500 text-gray-300 group-hover:text-black">
                         <BrainCircuit className="w-64 h-64 stroke-[0.5]" />
                     </div>
@@ -691,7 +701,6 @@ const App: React.FC = () => {
               </div>
             </Section>
 
-            {/* --- APPROACH / DIFFERENTIATORS --- */}
             <Section id="approach" className="overflow-hidden bg-creme">
               <SectionNumber number="03" className="left-0 top-0" />
               
@@ -708,7 +717,6 @@ const App: React.FC = () => {
               </SwissGrid>
 
               <SwissGrid className="relative z-10">
-                {/* Expanded Grid with Gaps */}
                 <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[
                     { id: '01', title: 'Strategic Vision', desc: 'Aligning efforts with long-term business objectives to drive purposeful growth and innovation.' },
@@ -720,7 +728,6 @@ const App: React.FC = () => {
                   ].map((item, index) => (
                     <FadeInItem key={item.id} delay={index * 100} className="h-full">
                       <div className="group border border-gray-200 bg-white p-8 md:p-10 hover:border-blue-swiss hover:shadow-lg transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-                        {/* Subtle Top Accent */}
                         <div className="absolute top-0 left-0 w-0 h-[3px] bg-blue-swiss transition-all duration-500 group-hover:w-full"></div>
                         
                         <div className="flex justify-between items-start mb-6">
@@ -736,7 +743,6 @@ const App: React.FC = () => {
               </SwissGrid>
             </Section>
 
-            {/* --- CONTACT & FOOTER --- */}
             <Section id="contact" className="bg-white pb-0 border-b-0">
               <SectionNumber number="04" className="right-0 top-0" />
               
@@ -749,10 +755,6 @@ const App: React.FC = () => {
                   </p>
                   
                   <div className="space-y-10">
-                    <div className="border-l border-gray-300 pl-6 group hover:border-blue-swiss transition-colors">
-                        <div className="text-xs font-mono text-gray-500 uppercase mb-2 flex items-center gap-2"><MessageSquare size={12} /> Email</div>
-                        <a href="mailto:connect@tradmak.com" className="text-xl md:text-2xl text-black hover:text-blue-swiss transition-colors font-medium">connect@tradmak.com</a>
-                    </div>
                     <div className="border-l border-gray-300 pl-6 group hover:border-blue-swiss transition-colors">
                         <div className="text-xs font-mono text-gray-500 uppercase mb-2">Location</div>
                         <address className="text-gray-600 not-italic text-lg">
@@ -819,6 +821,11 @@ const App: React.FC = () => {
                           disabled={formStatus === 'submitting' || formStatus === 'success'}
                         />
                         
+                        <div className="space-y-4">
+                           <label className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block">Security Verification</label>
+                           <div ref={recaptchaRef} className="g-recaptcha" data-sitekey="6LfRWTAsAAAAAOZmxRFgahi0R4eq8d3EP_xKdgt8"></div>
+                        </div>
+
                         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
                           <div className="flex items-center gap-2 text-gray-500">
                             <Clock size={14} />
@@ -827,7 +834,7 @@ const App: React.FC = () => {
                           <ButtonPrimary 
                             type="submit" 
                             className={`w-full md:w-auto py-5 px-12 text-base ${formStatus === 'success' ? 'bg-green-600 hover:bg-green-700' : ''}`}
-                            disabled={formStatus === 'submitting' || formStatus === 'success'}
+                            disabled={formStatus === 'submitting' || formStatus === 'success' || !captchaToken}
                           >
                              {formStatus === 'submitting' ? (
                                'Submitting...'
@@ -848,9 +855,8 @@ const App: React.FC = () => {
           </>
         )}
 
-        <Footer />
+        <Footer onNavigate={(page) => navigateTo(page)} />
         
-        {/* Back to Top Button - Positioned on the opposite side (Left) */}
         <button
           onClick={scrollToTop}
           className={`fixed bottom-8 left-8 z-50 p-4 bg-black text-white border border-black shadow-lg transition-all duration-500 transform hover:bg-blue-swiss hover:border-blue-swiss hover:-translate-y-1 ${showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}
@@ -859,7 +865,6 @@ const App: React.FC = () => {
           <ArrowUp size={20} />
         </button>
 
-        {/* Global Floating Chatbot */}
         <ChatWidget />
       </main>
     </div>
