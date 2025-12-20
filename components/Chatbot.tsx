@@ -67,7 +67,7 @@ const ChatWidget: React.FC = () => {
     function loadGif() {
       if (!introGif) return;
       // Using a placeholder as requested
-      introGif.src = `https://res.cloudinary.com/dsscxxw0b/image/upload/v1766125757/grok-video-c9cbca29-e201-4bfa-a9f2-eb8c862001b82-ezgif.com-video-to-gif-converter_jvegh1.gif`;
+      introGif.src = `https://via.placeholder.com/400x600/00A4DA/FFFFFF?text=TRADMAK+INTELLIGENCE`;
     }
 
     /**
@@ -335,14 +335,16 @@ const ChatWidget: React.FC = () => {
         if (introContainer) {
           introContainer.style.display = 'flex';
           loadGif();
-          // 5-second display duration (5000ms)
           setTimeout(() => {
-            introContainer.classList.add('fade-out');
+            introContainer.classList.add('active');
             setTimeout(() => {
-              introContainer.style.display = 'none';
-              displayInitialMessage();
-            }, 600); // 0.6s fade-out duration
-          }, 5000); // 5 seconds total display time
+              introContainer.classList.add('fade-out');
+              setTimeout(() => {
+                introContainer.style.display = 'none';
+                displayInitialMessage();
+              }, 600); 
+            }, 1800); 
+          }, 100);
         }
       } else {
         if (!languageSelected && !initialMessageDisplayed) displayInitialMessage();

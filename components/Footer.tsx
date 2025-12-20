@@ -40,7 +40,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       { label: 'Contact', href: '#/home' }
     ],
     socialMedia: [
-      { label: 'Linkedin', href: 'https://linkedin.com' }
+      { label: 'Linkedin', href: 'https://www.linkedin.com/company/tradmak/posts/?feedView=all' }
     ]
   };
 

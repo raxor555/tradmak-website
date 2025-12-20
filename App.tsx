@@ -155,7 +155,7 @@ const App: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Contact Form State
-  const [formData, setFormData] = useState({ fname: '', lname: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ fname: '', lname: '', email: '', message: '', consent: false });
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   useEffect(() => {
@@ -256,14 +256,24 @@ const App: React.FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
+    const { id, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData(prev => ({ ...prev, [id]: checkbox.checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [id]: value }));
+    }
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!captchaToken) {
       alert("Please complete the security verification.");
+      return;
+    }
+
+    if (!formData.consent) {
+      alert("Please agree to the data processing terms.");
       return;
     }
 
@@ -816,9 +826,26 @@ const App: React.FC = () => {
                           disabled={formStatus === 'submitting' || formStatus === 'success'}
                         />
                         
-                        <div className="space-y-4">
-                           <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Security Verification</label>
-                           <div ref={recaptchaRef} className="g-recaptcha"></div>
+                        <div className="space-y-6">
+                           <div className="flex items-start gap-3">
+                              <input 
+                                type="checkbox" 
+                                id="consent" 
+                                className="mt-1 w-4 h-4 accent-blue-swiss cursor-pointer" 
+                                required
+                                checked={formData.consent}
+                                onChange={handleInputChange}
+                                disabled={formStatus === 'submitting' || formStatus === 'success'}
+                              />
+                              <label htmlFor="consent" className="text-[11px] leading-relaxed text-gray-500 font-mono uppercase tracking-tight cursor-pointer">
+                                I consent to the processing of my data in accordance with the <button type="button" onClick={() => navigateTo('privacy-policy')} className="text-blue-swiss underline">Privacy Policy</button> and <button type="button" onClick={() => navigateTo('data-protection')} className="text-blue-swiss underline">Data Protection</button> terms, including necessary cross-border data sharing for service optimization.
+                              </label>
+                           </div>
+
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block">Security Verification</label>
+                              <div ref={recaptchaRef} className="g-recaptcha"></div>
+                           </div>
                         </div>
 
                         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
