@@ -34,14 +34,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       { label: 'Digital Experience', href: '#/digital-experience' },
       { label: 'AI Chatbots', href: '#/ai-chatbots' }
     ],
-    otherLinks: [
+    Company: [
+      { label: 'Abous Us', href: '#/home' },
       { label: 'Privacy Policy', href: '#/privacy-policy' },
-      { label: 'Data Protection', href: '#/data-protection' },
+      { label: 'Terms & Condition', href: '#/data-protection' },
       { label: 'Schedule Demo', href: '#/schedule-demo' },
       { label: 'Contact', href: '#/home' }
     ],
-    socialMedia: [
-      { label: 'Linkedin', href: 'https://www.linkedin.com/company/tradmak/posts/?feedView=all' }
+    Social: [
+       { label: 'Linkedin', href: 'https://www.linkedin.com/company/tradmak/posts/?feedView=all' }
     ]
   };
 
