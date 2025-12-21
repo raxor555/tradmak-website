@@ -604,7 +604,6 @@ const App: React.FC = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-300 pt-8">
                     {[
-                      { label: 'Founded', value: 'Dubai' },
                       { label: 'Sector', value: 'Industrial B2B' },
                       { label: 'Focus', value: 'Digital Trade' }
                     ].map(stat => (
@@ -667,10 +666,10 @@ const App: React.FC = () => {
                         <div className="font-mono text-8xl font-bold text-gray-100 mb-6 transition-colors duration-500 group-hover:text-black/5">02</div>
                         <h3 className="text-4xl md:text-5xl font-bold text-black uppercase mb-6 tracking-tight">International<br/>Trade</h3>
                         <p className="text-lg md:text-xl text-gray-500 leading-relaxed mb-8 max-w-xl transition-colors duration-500 group-hover:text-black">
-                          Leveraging supply chains, regulatory compliance, and market expertise to manage cross-border transactions. Collaboration includes sourcing raw materials and distributing specialty chemicals.
+                          Leveraging supply chains, regulatory compliance, and market expertise to manage cross-border transactions. Collaboration includes sourcing raw materials.
                         </p>
                         <ul className="space-y-4">
-                            {['Specialty Chemicals Distribution', 'Regulatory Adherence', 'Blockchain & AI Forecasting'].map(item => (
+                            {['Regulatory Adherence', 'Blockchain & AI Forecasting'].map(item => (
                               <li key={item} className="flex items-center gap-3 text-sm md:text-base text-gray-600 font-mono uppercase group-hover:text-blue-swiss transition-colors duration-300">
                                   <div className="w-1.5 h-1.5 bg-blue-swiss shrink-0 transition-all duration-300 group-hover:bg-blue-bright group-hover:scale-150"></div> 
                                   <span>{item}</span>
