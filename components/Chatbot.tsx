@@ -34,6 +34,7 @@ const ChatWidget: React.FC = () => {
     let selectedLanguage = 'en'; 
     let sessionActive = false;
     let userData = { name: '', email: '', phone: '' };
+    let agenticAIExpanded = false;
 
     // Webhook & session - UPDATED URLs
     const WEBHOOK_URL_EN = 'https://n8n.srv1040836.hstgr.cloud/webhook/tradmak-english-chatbot';
@@ -66,8 +67,8 @@ const ChatWidget: React.FC = () => {
 
     function loadGif() {
       if (!introGif) return;
-      // Using a placeholder as requested
-      introGif.src = `https://via.placeholder.com/400x600/00A4DA/FFFFFF?text=TRADMAK+INTELLIGENCE`;
+      // Using the specific GIF URL provided
+      introGif.src = 'https://res.cloudinary.com/dsscxxw0b/image/upload/v1766125757/grok-video-c9cbca29-e201-4bfa-a9f2-eb8c862001b82-ezgif.com-video-to-gif-converter_jvegh1.gif';
     }
 
     /**
@@ -163,6 +164,7 @@ const ChatWidget: React.FC = () => {
       languageSelected = false;
       selectedLanguage = 'en';
       userData = { name: '', email: '', phone: '' };
+      agenticAIExpanded = false;
 
       if (chatMessages) chatMessages.innerHTML = '';
       if (chatInput) {
@@ -321,7 +323,105 @@ const ChatWidget: React.FC = () => {
 
       typeWriter(botMsg, formatMessage(welcomeText), 20, () => {
         addTimestamp(botMsg);
+        setTimeout(() => showServiceOptions(), 500);
       });
+      smoothScrollToBottom();
+    }
+
+    function showServiceOptions() {
+      if (!chatMessages) return;
+      
+      const optionsContainer = document.createElement('div');
+      optionsContainer.className = 'service-options-container';
+      
+      const services = [
+        { id: 'agentic-ai', title: 'Agentic AI', icon: '🤖' },
+        { id: 'whatsapp', title: 'Whatsapp Integration', icon: '💬' },
+        { id: 'digital', title: 'Digital Experience', icon: '🌐' },
+        { id: 'chatbots', title: 'AI Chatbots', icon: '🤖' }
+      ];
+
+      services.forEach(service => {
+        const serviceButton = document.createElement('button');
+        serviceButton.className = 'service-option';
+        serviceButton.innerHTML = `<span class="service-icon">${service.icon}</span><span class="service-title">${service.title}</span>`;
+        serviceButton.onclick = () => handleServiceClick(service.id);
+        optionsContainer.appendChild(serviceButton);
+      });
+
+      chatMessages.appendChild(optionsContainer);
+      smoothScrollToBottom();
+    }
+
+    function handleServiceClick(serviceId: string) {
+      if (!chatMessages) return;
+      
+      if (serviceId === 'agentic-ai') {
+        if (!agenticAIExpanded) {
+          agenticAIExpanded = true;
+          showAgenticAISubOptions();
+        } else {
+          agenticAIExpanded = false;
+          chatMessages.innerHTML = '';
+          displayFullWelcomeMessage();
+        }
+      } else {
+        // Handle other services
+        const botMsg = document.createElement('div');
+        botMsg.className = 'bot-message';
+        chatMessages.appendChild(botMsg);
+        
+        const responseText = selectedLanguage === 'ar'
+          ? `تم اختيار ${serviceId}. هذا الخيار قيد التطوير.`
+          : `Selected ${serviceId}. This feature is under development.`;
+        
+        typeWriter(botMsg, formatMessage(responseText), 15, () => addTimestamp(botMsg));
+        smoothScrollToBottom();
+      }
+    }
+
+    function showAgenticAISubOptions() {
+      if (!chatMessages) return;
+      
+      const subOptionsContainer = document.createElement('div');
+      subOptionsContainer.className = 'agentic-ai-suboptions';
+      
+      const subOptions = [
+        { id: 'ai-agents', title: 'AI Agents', icon: '🤖' },
+        { id: 'aaas-system', title: 'AAAS System', icon: '📊' }
+      ];
+
+      subOptions.forEach(option => {
+        const optionButton = document.createElement('button');
+        optionButton.className = 'suboption-button';
+        optionButton.innerHTML = `<span class="suboption-icon">${option.icon}</span><span class="suboption-title">${option.title}</span>`;
+        optionButton.onclick = () => handleAgenticAISubOptionClick(option.id);
+        subOptionsContainer.appendChild(optionButton);
+      });
+
+      chatMessages.appendChild(subOptionsContainer);
+      smoothScrollToBottom();
+    }
+
+    function handleAgenticAISubOptionClick(subOptionId: string) {
+      if (!chatMessages) return;
+      
+      const botMsg = document.createElement('div');
+      botMsg.className = 'bot-message';
+      chatMessages.appendChild(botMsg);
+      
+      let responseText = '';
+      if (subOptionId === 'ai-agents') {
+        responseText = selectedLanguage === 'ar'
+          ? 'تم اختيار AI Agents. هذا الخيار قيد التطوير.'
+          : 'Selected AI Agents. This feature is under development.';
+      } else if (subOptionId === 'aaas-system') {
+        responseText = selectedLanguage === 'ar'
+          ? 'تم اختيار AAAS System. هذا الخيار قيد التطوير.'
+          : 'Selected AAAS System. This feature is under development.';
+      }
+      
+      typeWriter(botMsg, formatMessage(responseText), 15, () => addTimestamp(botMsg));
       smoothScrollToBottom();
     }
 
@@ -343,7 +443,7 @@ const ChatWidget: React.FC = () => {
                 introContainer.style.display = 'none';
                 displayInitialMessage();
               }, 600); 
-            }, 1800); 
+            }, 5000); // 5 seconds
           }, 100);
         }
       } else {
@@ -687,6 +787,80 @@ const ChatWidget: React.FC = () => {
           margin-top: 4px;
           font-family: monospace;
           opacity: 0.8;
+        }
+
+        /* Service Options */
+        .service-options-container {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-top: 12px;
+        }
+
+        .service-option {
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          border-radius: 12px;
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .service-option:hover {
+          background: var(--swiss-blue);
+          color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 164, 218, 0.15);
+        }
+
+        .service-icon {
+          font-size: 20px;
+        }
+
+        .service-title {
+          font-weight: 700;
+          font-size: 13px;
+        }
+
+        /* Agentic AI Suboptions */
+        .agentic-ai-suboptions {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-top: 12px;
+        }
+
+        .suboption-button {
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          border-radius: 12px;
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .suboption-button:hover {
+          background: var(--swiss-blue);
+          color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 164, 218, 0.15);
+        }
+
+        .suboption-icon {
+          font-size: 20px;
+        }
+
+        .suboption-title {
+          font-weight: 700;
+          font-size: 13px;
         }
 
         /* Typing Indicator CSS */
