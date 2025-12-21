@@ -755,7 +755,7 @@ const App: React.FC = () => {
                   <MonoLabel className="mb-4">Get in touch</MonoLabel>
                   <SectionHeadline className="mb-8">Start the<br/>Conversation</SectionHeadline>
                   <p className="text-gray-600 mb-12 max-w-md text-lg leading-relaxed">
-                    Contact our trade experts to discuss how we can optimize your supply chain and digital infrastructure.
+                   Contact our expert who can walk you through the products and answer your questions.
                   </p>
                   
                   <div className="space-y-10">
