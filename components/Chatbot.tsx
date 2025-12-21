@@ -356,27 +356,15 @@ const ChatWidget: React.FC = () => {
     function handleServiceClick(serviceId: string) {
       if (!chatMessages) return;
       
+      // Clear existing messages and show sub-options
+      chatMessages.innerHTML = '';
+      
       if (serviceId === 'agentic-ai') {
-        if (!agenticAIExpanded) {
-          agenticAIExpanded = true;
-          showAgenticAISubOptions();
-        } else {
-          agenticAIExpanded = false;
-          chatMessages.innerHTML = '';
-          displayFullWelcomeMessage();
-        }
+        agenticAIExpanded = true;
+        showAgenticAISubOptions();
       } else {
-        // Handle other services
-        const botMsg = document.createElement('div');
-        botMsg.className = 'bot-message';
-        chatMessages.appendChild(botMsg);
-        
-        const responseText = selectedLanguage === 'ar'
-          ? `تم اختيار ${serviceId}. هذا الخيار قيد التطوير.`
-          : `Selected ${serviceId}. This feature is under development.`;
-        
-        typeWriter(botMsg, formatMessage(responseText), 15, () => addTimestamp(botMsg));
-        smoothScrollToBottom();
+        // For other services, show their specific sub-options
+        showServiceSpecificSubOptions(serviceId);
       }
     }
 
@@ -395,7 +383,7 @@ const ChatWidget: React.FC = () => {
         const optionButton = document.createElement('button');
         optionButton.className = 'suboption-button';
         optionButton.innerHTML = `<span class="suboption-icon">${option.icon}</span><span class="suboption-title">${option.title}</span>`;
-        optionButton.onclick = () => handleAgenticAISubOptionClick(option.id);
+        optionButton.onclick = () => handleSubOptionClick(serviceId, option.id);
         subOptionsContainer.appendChild(optionButton);
       });
 
@@ -403,25 +391,43 @@ const ChatWidget: React.FC = () => {
       smoothScrollToBottom();
     }
 
-    function handleAgenticAISubOptionClick(subOptionId: string) {
+    function showServiceSpecificSubOptions(serviceId: string) {
       if (!chatMessages) return;
       
-      const botMsg = document.createElement('div');
-      botMsg.className = 'bot-message';
-      chatMessages.appendChild(botMsg);
+      const subOptionsContainer = document.createElement('div');
+      subOptionsContainer.className = 'service-specific-suboptions';
       
-      let responseText = '';
-      if (subOptionId === 'ai-agents') {
-        responseText = selectedLanguage === 'ar'
-          ? 'تم اختيار AI Agents. هذا الخيار قيد التطوير.'
-          : 'Selected AI Agents. This feature is under development.';
-      } else if (subOptionId === 'aaas-system') {
-        responseText = selectedLanguage === 'ar'
-          ? 'تم اختيار AAAS System. هذا الخيار قيد التطوير.'
-          : 'Selected AAAS System. This feature is under development.';
-      }
+      // For demonstration, using the same structure but with different content
+      const subOptions = [
+        { id: 'feature1', title: 'Feature 1', icon: '⭐' },
+        { id: 'feature2', title: 'Feature 2', icon: '🚀' }
+      ];
+
+      subOptions.forEach(option => {
+        const optionButton = document.createElement('button');
+        optionButton.className = 'suboption-button';
+        optionButton.innerHTML = `<span class="suboption-icon">${option.icon}</span><span class="suboption-title">${option.title}</span>`;
+        optionButton.onclick = () => handleSubOptionClick(serviceId, option.id);
+        subOptionsContainer.appendChild(optionButton);
+      });
+
+      chatMessages.appendChild(subOptionsContainer);
+      smoothScrollToBottom();
+    }
+
+    function handleSubOptionClick(serviceId: string, subOptionId: string) {
+      if (!chatMessages) return;
       
-      typeWriter(botMsg, formatMessage(responseText), 15, () => addTimestamp(botMsg));
+      // Send the message to webhook
+      const message = `tell me more about this ${serviceId === 'agentic-ai' ? (subOptionId === 'ai-agents' ? 'AI Agents' : 'AAAS System') : serviceId}`;
+      sendMessageToWebhook(message);
+      
+      // Show user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'user-message';
+      userMsg.textContent = message;
+      chatMessages.appendChild(userMsg);
+      addTimestamp(userMsg);
       smoothScrollToBottom();
     }
 
@@ -861,6 +867,14 @@ const ChatWidget: React.FC = () => {
         .suboption-title {
           font-weight: 700;
           font-size: 13px;
+        }
+
+        /* Service Specific Suboptions */
+        .service-specific-suboptions {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-top: 12px;
         }
 
         /* Typing Indicator CSS */
