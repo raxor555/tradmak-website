@@ -27,11 +27,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   const footerLinks = {
-    quickLinks: [
-      { label: 'About', href: '#/home' },
+    Products: [
+      { label: 'Whatsapp', href: '#/whatsapp-automation' },
       { label: 'AI Agents', href: '#/ai-agents' },
       { label: 'AaaS', href: '#/aaas' },
-      { label: 'Blog', href: '#/blog' }
+      { label: 'Digital Experience', href: '#/digital-experience' },
+      { label: 'AI Chatbots', href: '#/ai-chatbots' }
     ],
     otherLinks: [
       { label: 'Privacy Policy', href: '#/privacy-policy' },
