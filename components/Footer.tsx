@@ -35,11 +35,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       { label: 'Digital Experience', href: '#/digital-experience' },
       { label: 'AI Chatbots', href: '#/ai-chatbots' }
     ],
-    otherLinks: [
+    Company: [
       { label: 'About Us', href: '#/home' },
       { label: 'Privacy Policy', href: '#/privacy-policy' },
       { label: 'Terms & Condition', href: '#/data-protection' },
       { label: 'Schedule Demo', href: '#/schedule-demo' },
+      { label: 'Blogs', href: '#/blog' },
       { label: 'Contact', href: '#/home' }
     ],
     socialMedia: [
