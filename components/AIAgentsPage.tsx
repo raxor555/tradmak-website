@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Bot, Cpu, Search, FileText, Layers, Database, Lock, ArrowLeft, ArrowRight, ShoppingBag, Truck, Sparkles } from 'lucide-react';
 import { SwissGrid, Section, SectionHeadline, HeroHeadline, MonoLabel, BodyText, SectionNumber, ButtonPrimary, ButtonOutline } from './UI';
@@ -102,23 +103,19 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
 
     const currentLine = TERMINAL_LINES[currentLineIndex];
     
-    // If it's the cursor line, just show it immediately
     if (currentLine.type === 'cursor') {
       setDisplayedLines(prev => [...prev, currentLine]);
       return;
     }
 
     const timeout = setTimeout(() => {
-      // Create a temporary version of the line with only substring char index
       const partialText = currentLine.text.slice(0, currentCharIndex + 1);
       
       setDisplayedLines(prev => {
         const newLines = [...prev];
         if (currentCharIndex === 0) {
-          // Add new line
           newLines.push({ ...currentLine, text: partialText });
         } else {
-          // Update last line
           newLines[newLines.length - 1] = { ...currentLine, text: partialText };
         }
         return newLines;
@@ -127,11 +124,10 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
       if (currentCharIndex < currentLine.text.length - 1) {
         setCurrentCharIndex(prev => prev + 1);
       } else {
-        // Line finished
         setCurrentCharIndex(0);
         setCurrentLineIndex(prev => prev + 1);
       }
-    }, 20); // Faster typing speed
+    }, 20);
 
     return () => clearTimeout(timeout);
   }, [currentLineIndex, currentCharIndex]);
@@ -145,17 +141,12 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
   };
 
   const visibleAgents = AGENTS.slice(startIndex, startIndex + itemsPerPage);
-  // Fill with start if we are at the end to maintain 3 items (optional visual polish)
-  while (visibleAgents.length < itemsPerPage && visibleAgents.length > 0) {
-      // Logic to wrap around can be complex, for simplicity we limit navigation
-      break; 
-  }
 
   return (
     <div className="min-h-screen bg-creme text-black pt-20">
       
       {/* --- HERO SECTION REDESIGNED --- */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center border-b border-gray-300 overflow-hidden">
+      <section className="relative border-b border-gray-300 overflow-hidden pt-32 pb-20 md:pt-48 md:pb-32">
         
         {/* Animated Shader Background (Light) */}
         <div className="absolute inset-0 z-0 bg-creme pointer-events-none">
@@ -165,18 +156,14 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
            <div className="absolute inset-0 bg-grid-pattern opacity-[0.4]"></div>
         </div>
 
-        <SwissGrid className="relative z-10 h-full py-20">
+        <SwissGrid className="relative z-10 h-full">
           
-          {/* Left: Typography (Aligned Left Corner) */}
-          <div className="col-span-12 lg:col-span-6 flex flex-col justify-center items-start text-left">
+          <div className="col-span-12 lg:col-span-6 flex flex-col justify-start items-start text-left">
             <div className="animate-fade-in-up w-full">
                 <MonoLabel className="mb-6 text-blue-swiss" color="text-blue-swiss">Neural Orchestration Layer</MonoLabel>
-                
-                {/* Fixed Title Size using HeroHeadline to match Home Page */}
                 <HeroHeadline className="mb-8 text-left">
                   AI Agents
                 </HeroHeadline>
-                
                 <p className="text-xl md:text-2xl text-gray-600 font-light max-w-xl leading-relaxed border-l-2 border-blue-swiss/20 pl-8 mb-12 text-left">
                   Deploy autonomous synthetic workers that don't just chat—they analyze, negotiate, and execute complex trade workflows in real-time.
                 </p>
@@ -187,11 +174,9 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
             </div>
           </div>
 
-          {/* Right: UI Component (Swarm Monitor) - Aligned Right Corner */}
-          <div className="col-span-12 lg:col-span-6 flex flex-col justify-center items-end mt-12 lg:mt-0">
+          <div className="col-span-12 lg:col-span-6 flex flex-col justify-start lg:items-end mt-16 lg:mt-0">
              <div className="w-full max-w-[500px] animate-fade-in-right delay-200">
                 <div className="relative glass-card bg-white/60 border border-white/60 p-1 shadow-2xl backdrop-blur-md">
-                   {/* Top Bar */}
                    <div className="flex items-center justify-between bg-gray-50 px-4 py-3 border-b border-gray-200">
                       <div className="flex items-center gap-3">
                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
@@ -203,12 +188,9 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                       </div>
                    </div>
 
-                   {/* Main Monitor Area */}
                    <div className="p-6 relative overflow-hidden min-h-[300px] flex flex-col justify-between bg-white/40">
-                      {/* Grid bg */}
                       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
                       
-                      {/* Central Node Visual */}
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                          <div className="relative w-32 h-32 flex items-center justify-center">
                             <div className="absolute inset-0 border border-blue-swiss/30 rounded-full animate-ping opacity-20"></div>
@@ -217,7 +199,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                                <Cpu className="text-blue-swiss w-8 h-8" />
                             </div>
                             
-                            {/* Satellites */}
                             <div className="absolute top-0 right-0 w-3 h-3 bg-black rounded-full animate-float"></div>
                             <div className="absolute bottom-0 left-4 w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
                             <div className="absolute top-10 -left-10 w-8 h-8 border border-gray-300 bg-white/80 backdrop-blur rounded flex items-center justify-center">
@@ -226,7 +207,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                          </div>
                       </div>
 
-                      {/* Stats Overlay */}
                       <div className="relative z-10 flex justify-between items-end">
                          <div className="space-y-4">
                             <div>
@@ -239,7 +219,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                             </div>
                          </div>
                          
-                         {/* Mini Graph */}
                          <div className="flex items-end gap-1 h-12">
                             {[30, 50, 40, 70, 50, 80, 60, 90, 75, 50].map((h, i) => (
                                <div key={i} className="w-2 bg-gray-200 hover:bg-blue-swiss transition-colors duration-300" style={{ height: `${h}%` }}></div>
@@ -267,17 +246,16 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                 </p>
              </div>
              
-             {/* Slider Controls */}
              <div className="flex items-center gap-3">
                 <button 
                   onClick={prevSlide}
-                  className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-black"
+                  className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300"
                 >
                   <ArrowLeft size={20} />
                 </button>
                 <button 
                   onClick={nextSlide}
-                  className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-black"
+                  className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300"
                 >
                   <ArrowRight size={20} />
                 </button>
@@ -285,21 +263,16 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
           </div>
         </SwissGrid>
 
-        {/* --- CAROUSEL ROW --- */}
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {visibleAgents.map((agent) => (
               <div key={agent.id} className="relative group h-full min-h-[450px]">
-                 {/* GLASSMORPHISM CARD with SHADER GRADIENT */}
                  <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/70 to-white/40 backdrop-blur-xl border border-white/60 shadow-lg rounded-xl transition-all duration-500 group-hover:shadow-2xl group-hover:border-blue-swiss/30 overflow-hidden">
-                    
-                    {/* Shader / Gradient Blob Effect */}
                     <div className={`absolute -top-20 -right-20 w-60 h-60 rounded-full blur-[80px] opacity-40 transition-all duration-700 group-hover:scale-150 ${agent.id === 'vesta' ? 'bg-blue-swiss' : agent.id === 'aura' ? 'bg-green-400' : agent.id === 'helios' ? 'bg-orange-400' : 'bg-gray-400'}`}></div>
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50 group-hover:via-blue-swiss group-hover:opacity-100 transition-all duration-500"></div>
 
                     <div className="relative p-8 h-full flex flex-col justify-between z-10">
                         <div>
-                            {/* Header */}
                             <div className="flex justify-between items-start mb-8">
                               <div className={`w-14 h-14 flex items-center justify-center rounded-2xl border backdrop-blur-sm ${agent.bgColor} ${agent.borderColor}`}>
                                   <agent.icon size={28} className={agent.color} />
@@ -310,7 +283,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                               </div>
                             </div>
 
-                            {/* Content */}
                             <h3 className="text-3xl font-bold text-black uppercase mb-3 leading-none group-hover:text-blue-swiss transition-colors">{agent.name}</h3>
                             <div className="text-xs font-mono text-gray-500 mb-6 uppercase tracking-wider">{agent.role}</div>
                             <p className="text-gray-700 leading-relaxed mb-6 font-light">
@@ -318,7 +290,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                             </p>
                         </div>
 
-                        {/* Footer */}
                         <div className="border-t border-gray-200/60 pt-6 mt-4">
                             <div className="flex justify-between items-center text-xs font-mono text-gray-500">
                               <span>{agent.version}</span>
@@ -331,7 +302,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
             ))}
           </div>
           
-          {/* Progress Bar for Slider */}
           <div className="mt-12 w-full h-1 bg-gray-200 rounded-full overflow-hidden">
              <div 
                className="h-full bg-black transition-all duration-500 ease-out"
@@ -370,9 +340,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
             </div>
 
             <div className="col-span-12 lg:col-span-7 lg:pl-12">
-               {/* Terminal UI - FIXED: Auto height, no scrolling, no blank space */}
                <div className="w-full bg-[#050505] border border-gray-800 font-mono text-xs md:text-sm rounded-none shadow-2xl flex flex-col">
-                  {/* Terminal Header */}
                   <div className="bg-[#111] border-b border-gray-800 p-3 flex items-center justify-between shrink-0">
                      <div className="flex gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
@@ -381,10 +349,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                      </div>
                      <div className="text-gray-500">tradmak-agent-core — bash — 80x24</div>
                   </div>
-                  {/* Terminal Body - using h-auto/min-h-0 to fit content exactly */}
                   <div className="p-6 bg-[#050505] text-gray-300 space-y-2 h-auto min-h-[300px] relative">
-                     
-                     {/* Rendered Lines */}
                      {displayedLines.map((line, i) => (
                        <div key={i} className={`${line.type === 'success' ? 'text-green-500' : line.type === 'warning' ? 'text-yellow-500' : line.type === 'cmd' ? 'text-white' : 'text-gray-400'} font-mono leading-relaxed break-all relative z-10`}>
                          {line.text}
@@ -392,7 +357,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                        </div>
                      ))}
 
-                     {/* Graphic Overlay inside terminal */}
                      <div className="absolute bottom-6 right-6 p-4 border border-gray-800 bg-black/90 backdrop-blur pointer-events-none z-20">
                         <div className="text-[10px] text-gray-500 uppercase mb-2">System Load</div>
                         <div className="flex items-end gap-1 h-12 w-32">
@@ -407,7 +371,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
          </SwissGrid>
       </Section>
 
-      {/* --- TECHNICAL SPECS (New) --- */}
       <Section id="specs" className="bg-white">
          <SectionNumber number="03" className="right-0 top-0" />
          <SwissGrid>
@@ -416,42 +379,38 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                 <SectionHeadline>Technical Specifications</SectionHeadline>
             </div>
             
-            {/* Column 1: Model Arch */}
             <div className="col-span-12 md:col-span-4">
                 <div className="border-t border-blue-swiss pt-6">
                     <Layers className="w-8 h-8 text-black mb-6" />
                     <h3 className="text-2xl font-bold text-black uppercase mb-4">Model Architecture</h3>
                     <p className="text-gray-600 leading-relaxed">
-                        Built on a mixture-of-experts (MoE) transformer architecture optimized for tabular industrial data. Our 70B parameter core model utilizes Low-Rank Adaptation (LoRA) for task-specific fine-tuning, ensuring high accuracy with minimal inference latency.
+                        Built on a mixture-of-experts (MoE) transformer architecture optimized for tabular industrial data. Our 70B parameter core model utilizes Low-Rank Adaptation (LoRA) for task-specific fine-tuning.
                     </p>
                 </div>
             </div>
 
-            {/* Column 2: Data Processing */}
             <div className="col-span-12 md:col-span-4">
                 <div className="border-t border-gray-300 pt-6">
                     <Database className="w-8 h-8 text-black mb-6" />
                     <h3 className="text-2xl font-bold text-black uppercase mb-4">Data Processing</h3>
                     <p className="text-gray-600 leading-relaxed">
-                        Real-time ingestion pipeline capable of processing 50k+ events/second. Supports unstructured data (PDFs, emails) via OCR and NLP vectorization, normalizing outputs into structured JSON schemas for ERP integration.
+                        Real-time ingestion pipeline capable of processing 50k+ events/second. Supports unstructured data (PDFs, emails) via OCR and NLP vectorization.
                     </p>
                 </div>
             </div>
 
-             {/* Column 3: Security */}
             <div className="col-span-12 md:col-span-4">
                 <div className="border-t border-gray-300 pt-6">
                     <Lock className="w-8 h-8 text-black mb-6" />
                     <h3 className="text-2xl font-bold text-black uppercase mb-4">Security Protocols</h3>
                     <p className="text-gray-600 leading-relaxed">
-                        End-to-end encryption (AES-256) for data at rest and in transit. SOC 2 Type II compliant infrastructure with air-gapped deployment options for sensitive defense and government trade applications.
+                        End-to-end encryption (AES-256) for data at rest and in transit. SOC 2 Type II compliant infrastructure with air-gapped deployment options.
                     </p>
                 </div>
             </div>
          </SwissGrid>
       </Section>
 
-      {/* --- DEPLOYING YOUR AGENTS (New) --- */}
       <Section id="deploy" className="bg-creme">
          <SectionNumber number="04" className="left-0 top-0" />
          <SwissGrid className="items-center">
@@ -459,7 +418,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                  <MonoLabel className="mb-4 text-blue-swiss" color="text-blue-swiss">Onboarding</MonoLabel>
                  <SectionHeadline className="mb-8">Deploying Your<br/>Agents</SectionHeadline>
                  <BodyText className="mb-8">
-                     Our deployment pipeline is designed for velocity. From template selection to production activation, the process is streamlined to get your synthetic workforce operational in under 48 hours.
+                     Our deployment pipeline is designed for velocity. From template selection to production activation in under 48 hours.
                  </BodyText>
                  <div className="space-y-6 mb-10">
                      <div className="flex gap-4 items-start">
@@ -486,7 +445,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                  </div>
              </div>
              <div className="col-span-12 lg:col-span-6 mt-12 lg:mt-0">
-                 {/* Visual for Deployment - Simple Abstract UI */}
                  <div className="bg-white border border-gray-300 p-2 relative shadow-lg">
                      <div className="absolute top-0 left-0 w-full h-1 bg-blue-swiss animate-pulse"></div>
                      <div className="bg-gray-50 p-8 border border-gray-200 flex flex-col gap-4">
@@ -506,7 +464,6 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
          </SwissGrid>
       </Section>
 
-      {/* --- INTEGRATION CTA --- */}
       <Section className="border-b-0 bg-white">
          <SwissGrid>
             <div className="col-span-12 text-center">
@@ -515,7 +472,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                </div>
                <h2 className="text-4xl md:text-5xl font-bold text-black uppercase mb-6">Ready to Automate?</h2>
                <p className="text-gray-600 max-w-xl mx-auto mb-10 text-lg">
-                  Integrate TradMAK agents into your existing ERP via our REST API. Full documentation and sandbox environment available.
+                  Integrate TradMAK agents into your existing ERP via our REST API. Full documentation and sandbox available.
                </p>
                <ButtonPrimary onClick={onScheduleDemo}>
                   Schedule Demo

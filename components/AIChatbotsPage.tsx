@@ -1,6 +1,7 @@
+
 import React, { useEffect, useRef } from 'react';
 import { MessageSquare, Zap, Globe, Shield, Code, Sparkles, MessageCircle, Bot, Cpu } from 'lucide-react';
-import { SwissGrid, Section, HeroHeadline, SectionHeadline, MonoLabel, Card, ButtonPrimary, ButtonOutline } from './UI';
+import { SwissGrid, Section, HeroHeadline, SectionHeadline, MonoLabel, Card, ButtonPrimary, ButtonOutline, SectionNumber } from './UI';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -69,7 +70,7 @@ export const AIChatbotsPage: React.FC = () => {
     <div ref={containerRef} className="min-h-screen bg-creme text-black pt-20 overflow-hidden">
       
       {/* --- HERO --- */}
-      <section ref={heroRef} className="relative min-h-[90vh] flex flex-col justify-center border-b border-gray-300 overflow-hidden">
+      <section ref={heroRef} className="relative border-b border-gray-300 overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32">
         
         {/* ENHANCED SHADER BACKGROUND */}
         <div className="absolute inset-0 z-0 bg-creme pointer-events-none">
@@ -79,7 +80,7 @@ export const AIChatbotsPage: React.FC = () => {
            <div className="absolute inset-0 bg-grid-pattern opacity-[0.4]"></div>
         </div>
 
-        <SwissGrid className="relative z-10 h-full py-20 items-center">
+        <SwissGrid className="relative z-10 h-full items-center">
           <div className="col-span-12 lg:col-span-6">
             <div className="hero-label">
                 <MonoLabel className="mb-6 text-blue-swiss" color="text-blue-swiss">Conversational Intelligence</MonoLabel>
@@ -101,7 +102,6 @@ export const AIChatbotsPage: React.FC = () => {
           </div>
 
           <div className="col-span-12 lg:col-span-6 flex justify-center lg:justify-end mt-16 lg:mt-0 hero-visual">
-             {/* Chat Interface Visual */}
              <div className="w-full max-w-md bg-white/80 backdrop-blur-md border border-white shadow-2xl relative rounded-xl overflow-hidden glass-card">
                 <div className="bg-black/95 text-white p-4 flex justify-between items-center border-b border-gray-800">
                    <div className="flex items-center gap-3">
@@ -118,7 +118,6 @@ export const AIChatbotsPage: React.FC = () => {
                 </div>
                 
                 <div className="p-6 h-[450px] flex flex-col gap-6 overflow-hidden relative bg-gradient-to-b from-transparent to-gray-50/50">
-                   {/* Messages */}
                    <div className="self-start group">
                       <div className="bg-white border border-gray-200 p-4 max-w-[90%] rounded-2xl rounded-tl-sm shadow-sm group-hover:shadow-md transition-shadow">
                         <p className="text-sm text-gray-800 leading-relaxed">Hello. I am analyzing your shipment #TR-9920. It appears to be held at customs due to missing HS Code documentation.</p>
@@ -147,7 +146,6 @@ export const AIChatbotsPage: React.FC = () => {
                       <span className="text-[10px] text-gray-400 ml-2 mt-1 block">10:43 AM</span>
                    </div>
                    
-                   {/* Typing Indicator */}
                    <div className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 shadow-sm">
                       <span className="text-[10px] font-mono text-gray-400 uppercase">Agent typing</span>
                       <div className="flex gap-1">
@@ -163,7 +161,8 @@ export const AIChatbotsPage: React.FC = () => {
       </section>
 
       {/* --- FEATURES --- */}
-      <Section className="features-section">
+      <Section className="features-section bg-white">
+         <SectionNumber number="01" className="right-0 top-0" />
          <SwissGrid>
             <div className="col-span-12 mb-16">
                <SectionHeadline>Capabilities</SectionHeadline>
@@ -199,8 +198,57 @@ export const AIChatbotsPage: React.FC = () => {
          </SwissGrid>
       </Section>
 
+      {/* --- CONVERSATION DESIGN (New Section to fill content) --- */}
+      <Section className="bg-creme">
+         <SectionNumber number="02" className="left-0 top-0" />
+         <SwissGrid>
+            <div className="col-span-12 lg:col-span-5">
+               <MonoLabel className="mb-4 text-blue-swiss" color="text-blue-swiss">Design Philosophy</MonoLabel>
+               <SectionHeadline className="mb-8">Beyond<br/>Text</SectionHeadline>
+               <p className="text-gray-600 leading-relaxed mb-8">
+                  We design conversational flows that feel human, purposeful, and brand-aligned.
+               </p>
+               <div className="space-y-6">
+                  <div className="flex gap-4">
+                     <div className="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center">
+                        <MessageSquare size={18} className="text-blue-swiss" />
+                     </div>
+                     <div>
+                        <h4 className="font-bold uppercase text-sm mb-1">Contextual Memory</h4>
+                        <p className="text-xs text-gray-500">Remembers past interactions for seamless continuity.</p>
+                     </div>
+                  </div>
+                  <div className="flex gap-4">
+                     <div className="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center">
+                        <Sparkles size={18} className="text-blue-swiss" />
+                     </div>
+                     <div>
+                        <h4 className="font-bold uppercase text-sm mb-1">Personality Tuning</h4>
+                        <p className="text-xs text-gray-500">Adjust tone from professional to empathetic.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div className="col-span-12 lg:col-span-7 flex items-center justify-center mt-12 lg:mt-0">
+               <div className="relative w-full max-w-lg aspect-video bg-white border border-gray-200 shadow-xl p-8 flex flex-col justify-center gap-4">
+                  <div className="flex gap-3 items-end">
+                     <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                     <div className="bg-gray-100 p-3 rounded-2xl rounded-bl-none text-sm text-gray-600">Can you analyze the Q3 report?</div>
+                  </div>
+                  <div className="flex gap-3 items-end flex-row-reverse">
+                     <div className="w-8 h-8 bg-blue-swiss rounded-full"></div>
+                     <div className="bg-blue-swiss text-white p-3 rounded-2xl rounded-br-none text-sm shadow-md">
+                        Processing Q3 data. Revenue is up 12% YoY. Would you like a breakdown by region?
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </SwissGrid>
+      </Section>
+
       {/* --- USE CASES --- */}
       <Section className="bg-white use-cases-section">
+         <SectionNumber number="03" className="right-0 top-0" />
          <SwissGrid>
             <div className="col-span-12 lg:col-span-4">
                <MonoLabel className="mb-4">Applications</MonoLabel>
@@ -224,6 +272,15 @@ export const AIChatbotsPage: React.FC = () => {
                   </div>
                ))}
             </div>
+         </SwissGrid>
+      </Section>
+
+      <Section className="bg-creme border-b-0">
+         <SwissGrid>
+             <div className="col-span-12 text-center">
+                 <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter uppercase">Ready to Automate?</h2>
+                 <ButtonPrimary onClick={() => {}} className="bg-black hover:bg-gray-800">Start Building</ButtonPrimary>
+             </div>
          </SwissGrid>
       </Section>
     </div>

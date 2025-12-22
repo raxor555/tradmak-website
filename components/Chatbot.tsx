@@ -168,8 +168,11 @@ const ChatWidget: React.FC = () => {
 
     function showServiceOptions() {
       if (!chatMessages) return;
+      // CHANGE: Added an ID to the container so it can be easily selected and removed later.
       const optionsContainer = document.createElement('div');
       optionsContainer.className = 'service-options-container';
+      optionsContainer.id = 'serviceOptionsContainer'; // <-- CHANGE HERE
+
       const services = [
         { id: 'agents', title: 'AI Agents', icon: '🤖' },
         { id: 'whatsapp', title: 'WhatsApp API', icon: '💬' },
@@ -186,14 +189,60 @@ const ChatWidget: React.FC = () => {
       chatMessages.appendChild(optionsContainer);
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
+    
+    // CHANGE: New function to display AI Agent specific options.
+    function showAIAgentOptions() {
+      if (!chatMessages) return;
+      const aiOptionsContainer = document.createElement('div');
+      aiOptionsContainer.className = 'service-options-container'; // Re-using the same class for styling
+      aiOptionsContainer.id = 'aiAgentOptionsContainer'; // Unique ID for removal
+
+      const aiServices = [
+        { title: 'AI Agents', message: 'Tell me more about AI Agents' },
+        { title: 'AAAS', message: 'Tell me more about AAAS' }
+      ];
+
+      aiServices.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'service-option';
+        btn.innerHTML = `<span class="service-icon">🤖</span><span>${s.title}</span>`;
+        btn.onclick = () => {
+          // When an option is clicked, remove this container and send the specific message.
+          document.getElementById('aiAgentOptionsContainer')?.remove();
+          const uMsg = document.createElement('div');
+          uMsg.className = 'user-message';
+          uMsg.textContent = s.title;
+          chatMessages?.appendChild(uMsg);
+          addTimestamp(uMsg);
+          sendMessageToWebhook(s.message);
+        };
+        aiOptionsContainer.appendChild(btn);
+      });
+      chatMessages.appendChild(aiOptionsContainer);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
     function handleServiceClick(title: string) {
+      // CHANGE: Find and remove the service options container immediately upon any click.
+      const serviceContainer = document.getElementById('serviceOptionsContainer');
+      if (serviceContainer) {
+        serviceContainer.remove();
+      }
+
       const uMsg = document.createElement('div');
       uMsg.className = 'user-message';
       uMsg.textContent = title;
       chatMessages?.appendChild(uMsg);
       addTimestamp(uMsg);
-      sendMessageToWebhook(title);
+
+      // CHANGE: Check if the clicked service was "AI Agents".
+      if (title === 'AI Agents') {
+        // If so, show the new AI Agent options instead of sending a message to the webhook immediately.
+        showAIAgentOptions();
+      } else {
+        // For all other services, proceed as before.
+        sendMessageToWebhook(title);
+      }
     }
 
     async function sendMessageToWebhook(message: string) {

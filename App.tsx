@@ -135,21 +135,28 @@ const App: React.FC = () => {
 
   // Initialize reCAPTCHA when on home page
   useEffect(() => {
-    if (activePage === 'home' && recaptchaRef.current && (window as any).grecaptcha) {
-      try {
-        // Clear previous widget if any
-        if (recaptchaRef.current.innerHTML === '') {
-          (window as any).grecaptcha.render(recaptchaRef.current, {
-            sitekey: '6LfRWTAsAAAAAOZmxRFgahi0R4eq8d3EP_xKdgt8',
-            callback: (token: string) => setCaptchaToken(token),
-            'expired-callback': () => setCaptchaToken(null)
-          });
-        }
-      } catch (e) {
-        console.warn("reCAPTCHA rendering issue:", e);
+  let widgetId: number | null = null;
+  
+  if (activePage === 'home' && recaptchaRef.current && (window as any).grecaptcha) {
+    try {
+      if (recaptchaRef.current.innerHTML === '') {
+        widgetId = (window as any).grecaptcha.render(recaptchaRef.current, {
+          sitekey: '6LeHozMsAAAAAG-0Uoa22LPahhkcRU36ZG-SkD5J',
+          callback: (token: string) => setCaptchaToken(token),
+          'expired-callback': () => setCaptchaToken(null)
+        });
       }
+    } catch (e) {
+      console.warn("reCAPTCHA rendering issue:", e);
     }
-  }, [activePage]);
+  }
+
+  return () => {
+    if (widgetId !== null && (window as any).grecaptcha) {
+      (window as any).grecaptcha.reset(widgetId);
+    }
+  };
+}, [activePage]);
 
   // Typing animation state
   const [typingText, setTypingText] = useState("");
@@ -838,7 +845,7 @@ const App: React.FC = () => {
                                 disabled={formStatus === 'submitting' || formStatus === 'success'}
                               />
                               <label htmlFor="consent" className="text-[11px] leading-relaxed text-gray-500 font-mono uppercase tracking-tight cursor-pointer">
-                                I consent to the processing of my data in accordance with the <button type="button" onClick={() => navigateTo('privacy-policy')} className="text-blue-swiss underline">Privacy Policy</button> and <button type="button" onClick={() => navigateTo('data-protection')} className="text-blue-swiss underline">Data Protection</button> terms, including necessary cross-border data sharing for service optimization.
+                                I consent to the processing of my data in accordance with the <button type="button" onClick={() => navigateTo('privacy-policy')} className="text-blue-swiss underline">Privacy Policy</button> and <button type="button" onClick={() => navigateTo('data-protection')} className="text-blue-swiss underline">Terms & Condition</button> including necessary cross-border data sharing for service optimization.
                               </label>
                            </div>
 

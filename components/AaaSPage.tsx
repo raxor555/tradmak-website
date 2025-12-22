@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { 
   Settings, RefreshCw, TrendingUp, CheckCircle, ArrowRight, Layers, Workflow, 
@@ -145,7 +146,7 @@ export const AaaSPage: React.FC = () => {
       
       tl.from(".hero-anim", { y: 30, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" });
 
-      // Metric Counter Animation (if elements exist)
+      // Metric Counter Animation
       gsap.from(".metric-value", {
         scrollTrigger: { trigger: ".metrics-section", start: "top 85%" },
         textContent: 0,
@@ -155,7 +156,7 @@ export const AaaSPage: React.FC = () => {
         stagger: 0.2
       });
 
-      // Industry Cards - Updated trigger to be more reliable
+      // Industry Cards
       gsap.from(".ind-card", {
         scrollTrigger: { trigger: ".industries-grid", start: "top 95%" },
         y: 40,
@@ -163,7 +164,7 @@ export const AaaSPage: React.FC = () => {
         duration: 0.6,
         stagger: 0.05,
         ease: "power3.out",
-        clearProps: "all" // Ensure visibility after animation
+        clearProps: "all"
       });
     }, containerRef);
 
@@ -179,14 +180,14 @@ export const AaaSPage: React.FC = () => {
     <div ref={containerRef} className="min-h-screen bg-creme text-black pt-20 overflow-hidden">
       
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center border-b border-gray-300 overflow-hidden">
+      <section className="relative border-b border-gray-300 overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32">
         <div className="absolute inset-0 z-0 bg-creme pointer-events-none">
            <div className="absolute top-[-20%] right-[-10%] w-[900px] h-[900px] bg-blue-swiss/5 rounded-full blur-[140px] mix-blend-multiply animate-blob"></div>
            <div className="absolute bottom-[-10%] left-[-10%] w-[700px] h-[700px] bg-purple-accent/5 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
            <div className="absolute inset-0 bg-grid-pattern opacity-[0.4]"></div>
         </div>
 
-        <SwissGrid className="relative z-10 h-full py-20 items-center">
+        <SwissGrid className="relative z-10 items-center">
           <div className="col-span-12 lg:col-span-6 z-20">
             <MonoLabel className="mb-6 text-blue-swiss hero-anim" color="text-blue-swiss">AIAaS — Solution</MonoLabel>
             <HeroHeadline className="mb-6 text-left hero-anim">
@@ -203,20 +204,16 @@ export const AaaSPage: React.FC = () => {
           </div>
           
           <div className="col-span-12 lg:col-span-6 flex justify-center items-center mt-12 lg:mt-0 relative hero-anim">
-             {/* Abstract Neural Core Visual */}
              <div className="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px] flex items-center justify-center">
-                {/* Orbiting Elements */}
                 <div className="absolute w-full h-full border border-gray-200 rounded-full animate-spin-slow opacity-30"></div>
                 <div className="absolute w-[80%] h-[80%] border border-dashed border-blue-swiss rounded-full animate-spin-reverse-slow opacity-20"></div>
                 <div className="absolute w-[60%] h-[60%] border border-gray-300 rounded-full animate-pulse opacity-40"></div>
                 
-                {/* Central Core */}
                 <div className="relative w-40 h-40 bg-white/10 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl flex items-center justify-center rotate-45 z-10">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-swiss/20 to-purple-500/20 rounded-2xl"></div>
                     <BrainCircuit size={64} className="text-black -rotate-45 relative z-20" />
                 </div>
 
-                {/* Satellite Nodes */}
                 <div className="absolute top-0 left-1/2 w-16 h-16 bg-white border border-gray-200 shadow-lg rounded-xl flex items-center justify-center animate-float z-20">
                     <Database size={24} className="text-gray-600"/>
                 </div>
@@ -267,7 +264,7 @@ export const AaaSPage: React.FC = () => {
           </SwissGrid>
       </Section>
 
-      {/* --- THE ENGINE (METRICS & PROCESS) --- */}
+      {/* --- THE ENGINE --- */}
       <Section className="metrics-section bg-creme">
          <SwissGrid>
              <div className="col-span-12 mb-12 text-center">
@@ -276,7 +273,6 @@ export const AaaSPage: React.FC = () => {
              </div>
              
              <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 {/* Card 1: Structured Intelligence */}
                  <div className="group relative p-8 bg-white border border-gray-200 hover:border-blue-swiss transition-all duration-500 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-2">
                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-700">
                        <Database size={100} />
@@ -293,7 +289,6 @@ export const AaaSPage: React.FC = () => {
                     </div>
                  </div>
 
-                 {/* Card 2: Human In The Loop */}
                  <div className="group relative p-8 bg-white border border-gray-200 hover:border-blue-swiss transition-all duration-500 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-2">
                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-700">
                        <Users size={100} />
@@ -310,7 +305,6 @@ export const AaaSPage: React.FC = () => {
                     </div>
                  </div>
 
-                 {/* Card 3: Performance (Featured) */}
                  <div className="group relative p-8 bg-black text-white border border-black rounded-xl overflow-hidden col-span-1 lg:col-span-1 shadow-2xl hover:-translate-y-2 transition-transform duration-500">
                      <div className="absolute inset-0 bg-blue-swiss/10 group-hover:bg-blue-swiss/20 transition-colors"></div>
                      <div className="absolute -right-10 -bottom-10 opacity-20 text-white">
@@ -335,7 +329,6 @@ export const AaaSPage: React.FC = () => {
                      </div>
                  </div>
 
-                 {/* Card 4: Protocol Mastery */}
                  <div className="group relative p-8 bg-white border border-gray-200 hover:border-blue-swiss transition-all duration-500 rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-2">
                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-700">
                        <Workflow size={100} />
@@ -379,7 +372,7 @@ export const AaaSPage: React.FC = () => {
           </SwissGrid>
       </Section>
 
-      {/* --- INDUSTRIES (CATEGORIES) --- */}
+      {/* --- INDUSTRIES --- */}
       <Section id="categories" className="bg-creme">
          <SectionNumber number="02" className="left-0 top-0" />
          <SwissGrid>
@@ -434,7 +427,6 @@ export const AaaSPage: React.FC = () => {
           </SwissGrid>
       </Section>
 
-      {/* --- CTA --- */}
       <Section className="bg-creme border-b-0">
          <SwissGrid>
             <div className="col-span-12 text-center">

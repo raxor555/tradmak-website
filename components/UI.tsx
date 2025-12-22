@@ -21,7 +21,7 @@ export const SwissGrid: React.FC<{ children: React.ReactNode; className?: string
 );
 
 export const Section: React.FC<{ children: React.ReactNode; className?: string; id?: string }> = ({ children, className = '', id }) => (
-  <section id={id} className={`relative py-24 md:py-32 lg:py-48 border-b border-gray-300 ${className}`}>
+  <section id={id} className={`relative py-16 md:py-24 lg:py-32 border-b border-gray-300 ${className}`}>
     {children}
   </section>
 );
@@ -29,7 +29,7 @@ export const Section: React.FC<{ children: React.ReactNode; className?: string; 
 // --- Typography ---
 
 export const HeroHeadline: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <h1 className={`text-[12vw] md:text-[8vw] lg:text-[7.5rem] font-bold text-black leading-ultra-tight tracking-tighter uppercase font-sans ${className}`}>
+  <h1 className={`text-[12vw] md:text-[8vw] lg:text-[7.5rem] font-bold text-black leading-tight tracking-tighter uppercase font-sans ${className}`}>
     {children}
   </h1>
 );
@@ -102,7 +102,6 @@ export const ButtonPrimary: React.FC<{
     <span className="relative z-10 flex items-center gap-2">
       {children}
     </span>
-    {/* Hover slide effect - disabled when button is disabled */}
     {!disabled && <div className="absolute inset-0 bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>}
   </button>
 );
@@ -155,7 +154,6 @@ export const TextLink: React.FC<{
 
 // --- Form Elements ---
 
-// Updated Input component to support optional icons
 export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label: string; icon?: React.ReactNode }> = ({ label, id, className = '', icon, ...props }) => (
   <div className="w-full group">
     <div className="flex justify-between mb-3">
@@ -187,7 +185,6 @@ export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { lab
   </div>
 );
 
-// Added Select component
 export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; options: { label: string; value: string }[] }> = ({ label, id, className = '', options, ...props }) => (
   <div className="w-full group">
     <div className="flex justify-between mb-3">
@@ -254,7 +251,6 @@ export const Card: React.FC<{ children: React.ReactNode; className?: string; noH
     ${className}
   `}>
     {children}
-    {/* Corner accents */}
     <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
