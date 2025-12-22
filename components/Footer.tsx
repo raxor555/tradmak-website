@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { SwissGrid } from './UI';
 
@@ -35,12 +36,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       { label: 'Digital Experience', href: '#/digital-experience' },
       { label: 'AI Chatbots', href: '#/ai-chatbots' }
     ],
-    Company: [
+    companyLinks: [
       { label: 'About Us', href: '#/home' },
+      { label: 'Blog', href: '#/blog' },
       { label: 'Privacy Policy', href: '#/privacy-policy' },
       { label: 'Terms & Condition', href: '#/data-protection' },
       { label: 'Schedule Demo', href: '#/schedule-demo' },
-      { label: 'Blogs', href: '#/blog' },
       { label: 'Contact', href: '#/home' }
     ],
     socialMedia: [
@@ -98,9 +99,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         <div className="col-span-4 md:col-span-2 lg:col-span-2">
-          <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Other Links</h4>
+          <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Company</h4>
           <ul className="space-y-4">
-            {(footerLinks.otherLinks || []).map(link => (
+            {(footerLinks.companyLinks || []).map(link => (
               <li key={link.label}>
                 <a href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-gray-400 hover:text-blue-swiss text-sm font-medium transition-colors">{link.label}</a>
               </li>
