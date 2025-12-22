@@ -260,7 +260,7 @@ const ChatWidget: React.FC = () => {
         const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, session_id: SESSION_ID, user_name: userData.name, language: selectedLanguage })
+          body: JSON.stringify({ message, session_id: SESSION_ID, user_name: userData.name, phone_number: userData.phone, email: userData.email, language: selectedLanguage })
         });
         const txt = await res.text();
         let out = "";
