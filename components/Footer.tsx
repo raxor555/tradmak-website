@@ -26,22 +26,23 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     }
   };
 
+  // Data object defined locally to ensure availability during render
   const footerLinks = {
-    Products: [
+    quickLinks: [
       { label: 'Whatsapp', href: '#/whatsapp-automation' },
       { label: 'AI Agents', href: '#/ai-agents' },
       { label: 'AaaS', href: '#/aaas' },
       { label: 'Digital Experience', href: '#/digital-experience' },
       { label: 'AI Chatbots', href: '#/ai-chatbots' }
     ],
-    Company: [
-      { label: 'Abous Us', href: '#/home' },
+    otherLinks: [
+      { label: 'About Us', href: '#/home' },
       { label: 'Privacy Policy', href: '#/privacy-policy' },
       { label: 'Terms & Condition', href: '#/data-protection' },
       { label: 'Schedule Demo', href: '#/schedule-demo' },
       { label: 'Contact', href: '#/home' }
     ],
-    Social: [
+    socialMedia: [
        { label: 'Linkedin', href: 'https://www.linkedin.com/company/tradmak/posts/?feedView=all' }
     ]
   };
@@ -87,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="col-span-4 md:col-span-2 lg:col-span-2">
           <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Quick Links</h4>
           <ul className="space-y-4">
-            {footerLinks.quickLinks.map(link => (
+            {(footerLinks.quickLinks || []).map(link => (
               <li key={link.label}>
                 <a href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-gray-400 hover:text-blue-swiss text-sm font-medium transition-colors">{link.label}</a>
               </li>
@@ -98,7 +99,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="col-span-4 md:col-span-2 lg:col-span-2">
           <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Other Links</h4>
           <ul className="space-y-4">
-            {footerLinks.otherLinks.map(link => (
+            {(footerLinks.otherLinks || []).map(link => (
               <li key={link.label}>
                 <a href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-gray-400 hover:text-blue-swiss text-sm font-medium transition-colors">{link.label}</a>
               </li>
@@ -109,7 +110,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="col-span-4 md:col-span-2 lg:col-span-2">
           <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Social Media</h4>
           <ul className="space-y-4">
-            {footerLinks.socialMedia.map(link => (
+            {(footerLinks.socialMedia || []).map(link => (
               <li key={link.label}>
                 <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-swiss text-sm font-medium transition-colors">{link.label}</a>
               </li>

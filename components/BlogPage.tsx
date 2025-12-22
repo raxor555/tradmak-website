@@ -12,6 +12,15 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onPostClick }) => {
   const [subscribed, setSubscribed] = useState(false);
   const [hoveredPost, setHoveredPost] = useState<string | null>(null);
 
+  // Safeguard against empty BLOG_POSTS
+  if (!BLOG_POSTS || BLOG_POSTS.length === 0) {
+    return (
+      <div className="min-h-screen bg-creme flex items-center justify-center p-12">
+        <p className="font-mono text-xs uppercase tracking-widest text-gray-400">Loading intelligence reports...</p>
+      </div>
+    );
+  }
+
   const featuredPost = BLOG_POSTS[0];
   const remainingPosts = BLOG_POSTS.slice(1);
 
@@ -40,57 +49,59 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onPostClick }) => {
           </div>
 
           {/* Featured Post Layout */}
-          <div 
-            className="col-span-12 lg:col-span-8 group cursor-pointer"
-            onClick={() => onPostClick(featuredPost.id)}
-            onMouseEnter={() => setHoveredPost(featuredPost.id)}
-            onMouseLeave={() => setHoveredPost(null)}
-          >
-            <div className={`aspect-[16/8] w-full overflow-hidden border border-gray-200 mb-8 transition-all duration-300 ${hoveredPost === featuredPost.id ? 'border-blue-swiss/30' : ''}`}>
-              <img 
-                src={featuredPost.image} 
-                alt={featuredPost.title} 
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-            </div>
-            <div className="flex items-center gap-6 mb-4">
-              <span className="text-[10px] font-mono text-blue-swiss font-bold uppercase tracking-widest">{featuredPost.category}</span>
-              <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-              <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">{featuredPost.date}</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tighter mb-6 group-hover:text-blue-swiss transition-colors duration-300">
-              {featuredPost.title}
-            </h2>
-            <p className="text-xl text-gray-600 leading-relaxed mb-8 max-w-3xl">
-              {featuredPost.excerpt}
-            </p>
-            <div className="flex items-center gap-4 py-4 border-y border-gray-100 mb-8">
-              <div className="flex items-center gap-2">
-                <User size={14} className="text-gray-400" />
-                <span className="text-[10px] font-mono uppercase text-gray-500">{featuredPost.author}</span>
+          {featuredPost && (
+            <div 
+              className="col-span-12 lg:col-span-8 group cursor-pointer"
+              onClick={() => onPostClick(featuredPost.id)}
+              onMouseEnter={() => setHoveredPost(featuredPost.id)}
+              onMouseLeave={() => setHoveredPost(null)}
+            >
+              <div className={`aspect-[16/8] w-full overflow-hidden border border-gray-200 mb-8 transition-all duration-300 ${hoveredPost === featuredPost.id ? 'border-blue-swiss/30' : ''}`}>
+                <img 
+                  src={featuredPost.image} 
+                  alt={featuredPost.title} 
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              </div>
+              <div className="flex items-center gap-6 mb-4">
+                <span className="text-[10px] font-mono text-blue-swiss font-bold uppercase tracking-widest">{featuredPost.category}</span>
+                <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">{featuredPost.date}</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tighter mb-6 group-hover:text-blue-swiss transition-colors duration-300">
+                {featuredPost.title}
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed mb-8 max-w-3xl">
+                {featuredPost.excerpt}
+              </p>
+              <div className="flex items-center gap-4 py-4 border-y border-gray-100 mb-8">
+                <div className="flex items-center gap-2">
+                  <User size={14} className="text-gray-400" />
+                  <span className="text-[10px] font-mono uppercase text-gray-500">{featuredPost.author}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock size={14} className="text-gray-400" />
+                  <span className="text-[10px] font-mono uppercase text-gray-500">{featuredPost.readTime}</span>
+                </div>
+                <div className="flex items-center gap-2 ml-auto">
+                  <Eye size={14} className="text-gray-400" />
+                  <span className="text-[10px] font-mono uppercase text-gray-500">{(featuredPost.views || 0).toLocaleString()} views</span>
+                </div>
               </div>
               <div className="flex items-center gap-2">
-                <Clock size={14} className="text-gray-400" />
-                <span className="text-[10px] font-mono uppercase text-gray-500">{featuredPost.readTime}</span>
-              </div>
-              <div className="flex items-center gap-2 ml-auto">
-                <Eye size={14} className="text-gray-400" />
-                <span className="text-[10px] font-mono uppercase text-gray-500">{featuredPost.views?.toLocaleString()} views</span>
+                <ButtonPrimary className="px-8 py-3 text-sm">
+                  Read Full Article
+                </ButtonPrimary>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <ButtonPrimary className="px-8 py-3 text-sm">
-                Read Full Article
-              </ButtonPrimary>
-            </div>
-          </div>
+          )}
 
           <div className="col-span-12 lg:col-span-4 lg:pl-12 flex flex-col gap-12">
             <div className="bg-white p-8 border border-gray-200">
               <h4 className="text-xs font-mono font-bold uppercase tracking-widest mb-6 border-b border-gray-100 pb-4">Trending</h4>
               <div className="space-y-8">
-                {remainingPosts.slice(0, 3).map((post, idx) => (
+                {(remainingPosts || []).slice(0, 3).map((post, idx) => (
                   <div 
                     key={post.id} 
                     className="group cursor-pointer"
@@ -128,7 +139,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onPostClick }) => {
       <Section className="bg-white">
         <SectionNumber number="REPORTS" className="left-0 top-0" />
         <SwissGrid className="gap-y-24">
-          {remainingPosts.map((post) => (
+          {(remainingPosts || []).map((post) => (
             <div 
               key={post.id} 
               className="col-span-12 md:col-span-6 lg:col-span-4 group flex flex-col h-full cursor-pointer"
