@@ -331,9 +331,6 @@ export const PrivacyPolicyPage: React.FC = () => {
                   <p className="leading-relaxed text-lg">
                     If you have any questions about this Privacy Policy or data protection practices, contact us at:
                   </p>
-                  <p className="mt-4 text-2xl md:text-3xl font-bold text-blue-swiss">
-                    info@tradmak.com
-                  </p>
                 </section>
 
                 <section className="pt-20 border-t border-gray-200">
