@@ -214,7 +214,7 @@ const ChatWidget: React.FC = () => {
       optionsContainer.id = 'serviceOptionsContainer';
 
       const services = [
-        { id: 'agents', title: 'AI Agents', icon: '🤖' },
+        { id: 'agents', title: 'Agents', icon: '🤖' },
         { id: 'whatsapp', title: 'WhatsApp API', icon: '💬' },
         { id: 'digital', title: 'Digital Exp', icon: '🌐' },
         { id: 'chatbots', title: 'AI Chatbots', icon: '🤖' }
@@ -237,8 +237,8 @@ const ChatWidget: React.FC = () => {
       aiOptionsContainer.id = 'aiAgentOptionsContainer';
 
       const aiServices = [
-        { title: 'AI Agents', message: 'Tell me more about AI Agents' },
-        { title: 'AAAS', message: 'Tell me more about AAAS' }
+        { title: 'Agents', message: 'Tell me more about Agents' },
+        { title: 'AaaS', message: 'Tell me more about AaaS' }
       ];
 
       aiServices.forEach(s => {
