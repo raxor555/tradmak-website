@@ -33,7 +33,7 @@ const INDUSTRIES = [
 
 const FAQS = [
   { q: "What is the WhatsApp Business API?", a: "The WhatsApp Business API is the enterprise-grade solution for medium to large businesses." },
-  { q: "Is the API free?", a: "The API has conversation-based pricing. The first 1,000 service conversations per month are free." },
+  { q: "Is the API free?", a: "The API has conversation-based pricing based on META as package based. The first 1000 tokens is covered in the rollout package" },
   { q: "Can I use my existing number?", a: "Yes. With TradMAK's Coexistence feature, you can migrate your number while keeping your history." }
 ];
 
