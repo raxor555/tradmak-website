@@ -81,6 +81,13 @@ const App: React.FC = () => {
   const recaptchaRef = useRef<HTMLDivElement>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   
+  // Corporate Email Validation
+  const isCorporateEmail = (email: string) => {
+    const blocked = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'aol.com', 'mail.ru', 'yandex.ru', 'protonmail.com', 'zoho.com'];
+    const domain = email.split('@')[1]?.toLowerCase();
+    return domain && !blocked.includes(domain);
+  };
+
   // Handle Hash-based Routing
   useEffect(() => {
     const handleHashChange = () => {
@@ -277,6 +284,11 @@ const App: React.FC = () => {
     e.preventDefault();
     if (!captchaToken) {
       alert("Please complete the security verification.");
+      return;
+    }
+
+    if (!isCorporateEmail(formData.email)) {
+      alert("Please enter a corporate email address. Personal email domains (Gmail, Yahoo, etc.) are not accepted.");
       return;
     }
 
@@ -689,7 +701,7 @@ const App: React.FC = () => {
 
                   <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 group">
                     <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-white border border-blue-swiss -translate-x-[7px] md:-translate-x-[8px] mt-2 md:mt-10 z-10 group-hover:bg-blue-swiss group-hover:scale-125 transition-all duration-500 shadow-[0_0_0_4px_#F7F7F5]"></div>
-                    <div className="md:text-right md:pr-24 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-[1.01] origin-right">
+                    <div className="md:text-right md:pr-24 pl-12 md:pl-0 pt-1 md:pt-0 transition-transform duration-500 group-hover:scale-101 origin-right">
                         <div className="font-mono text-8xl font-bold text-gray-100 mb-6 transition-colors duration-500 group-hover:text-blue-swiss/10">03</div>
                         <h3 className="text-4xl md:text-5xl font-bold text-black uppercase mb-6 tracking-tight">Digitalization<br/>Tech</h3>
                         <p className="text-lg md:text-xl text-gray-500 leading-relaxed mb-8 ml-auto max-w-xl transition-colors duration-500 group-hover:text-black">
@@ -769,7 +781,7 @@ const App: React.FC = () => {
                   <div className="space-y-10">
                     <div className="border-l border-gray-300 pl-6 group hover:border-blue-swiss transition-colors">
                         <div className="text-xs font-mono text-gray-500 uppercase mb-2">Location</div>
-                        <address className="text-gray-600 not-italic text-lg">
+                        <address className="not-italic text-gray-600 not-italic text-lg">
                           TradMAK FZCO<br/>
                           Dubai Silicon Oasis<br/>
                           Dubai, UAE

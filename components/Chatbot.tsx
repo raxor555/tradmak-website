@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 
 const ChatWidget: React.FC = () => {
@@ -6,7 +7,6 @@ const ChatWidget: React.FC = () => {
     const widgetButton = document.getElementById('widgetButton');
     const chatContainer = document.getElementById('chatContainer');
     const minimizeButton = document.getElementById('minimizeButton');
-    const endChatButton = document.getElementById('endChatButton');
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput') as HTMLInputElement;
     const sendButton = document.getElementById('sendButton') as HTMLButtonElement;
@@ -15,7 +15,7 @@ const ChatWidget: React.FC = () => {
 
     // Form Elements
     const leadFormOverlay = document.getElementById('leadFormOverlay');
-    const leadForm = document.getElementById('leadForm');
+    const leadForm = document.getElementById('leadForm') as HTMLFormElement;
     const inputName = document.getElementById('inputName') as HTMLInputElement;
     const inputEmail = document.getElementById('inputEmail') as HTMLInputElement;
     const inputPhone = document.getElementById('inputPhone') as HTMLInputElement;
@@ -25,15 +25,15 @@ const ChatWidget: React.FC = () => {
     // State flags
     let initialMessageDisplayed = false;
     let introShownThisSession = false;
-    let languageSelected = false;
     let selectedLanguage = 'en'; 
     let sessionActive = false;
     let userData = { name: '', email: '', phone: '' };
+    let countryCodePrefix = '+971 '; // Default to UAE if detection fails
 
     // GIF Source - Provided by User
     const GIF_URL = 'https://res.cloudinary.com/dsscxxw0b/image/upload/v1766125757/grok-video-c9cbca29-e201-4bfa-a9f2-eb8c862001b82-ezgif.com-video-to-gif-converter_jvegh1.gif';
     
-    // Preload GIF for smooth transition
+    // Preload GIF
     if (introGif) {
       const img = new Image();
       img.src = GIF_URL;
@@ -46,6 +46,41 @@ const ChatWidget: React.FC = () => {
     const WEBHOOK_URL_AR = 'https://n8n.srv1040836.hstgr.cloud/webhook/tradmak-arabic-chatbot';
     let SESSION_ID = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
+    // Auto-detect Country Code
+    fetch('https://ipwho.is/')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.calling_code && inputPhone) {
+          countryCodePrefix = `+${data.calling_code} `;
+          inputPhone.value = countryCodePrefix;
+        }
+      })
+      .catch(e => {
+        console.log('Country code fetch failed', e);
+        if (inputPhone) inputPhone.value = countryCodePrefix;
+      });
+
+    // Enforcement of non-removable country code
+    inputPhone?.addEventListener('keydown', (e: KeyboardEvent) => {
+      const cursor = inputPhone.selectionStart || 0;
+      if ((e.key === 'Backspace' || e.key === 'Delete') && cursor <= countryCodePrefix.length) {
+        e.preventDefault();
+      }
+    });
+
+    inputPhone?.addEventListener('input', () => {
+      if (!inputPhone.value.startsWith(countryCodePrefix)) {
+        inputPhone.value = countryCodePrefix + inputPhone.value.replace(/^\+?\d*\s?/, '').trim();
+      }
+    });
+
+    // Corporate Email Validation Helper
+    const isCorporateEmail = (email: string) => {
+      const blocked = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'aol.com', 'mail.ru', 'yandex.ru', 'protonmail.com', 'zoho.com'];
+      const domain = email.split('@')[1]?.toLowerCase();
+      return domain && !blocked.includes(domain);
+    };
+
     function formatMessage(text: string): string {
       return text
         .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
@@ -56,7 +91,6 @@ const ChatWidget: React.FC = () => {
     function typeWriter(element: HTMLElement, html: string, speed = 15, onFinish: (() => void) | null = null) {
       let i = 0;
       let currentHtml = "";
-      
       function type() {
         if (i < html.length) {
           if (html[i] === '<') {
@@ -93,7 +127,6 @@ const ChatWidget: React.FC = () => {
 
     function selectLanguage(lang: string) {
       selectedLanguage = lang;
-      languageSelected = true;
       if (lang === 'ar') chatContainer.classList.add('arabic');
       else chatContainer.classList.remove('arabic');
       if (chatMessages) chatMessages.innerHTML = '';
@@ -108,7 +141,15 @@ const ChatWidget: React.FC = () => {
 
     leadForm?.addEventListener('submit', (e) => {
       e.preventDefault();
-      userData = { name: inputName.value, email: inputEmail.value, phone: inputPhone.value };
+      const emailVal = inputEmail.value.trim();
+      
+      if (!isCorporateEmail(emailVal)) {
+        alert(selectedLanguage === 'ar' ? 'يرجى إدخال بريد إلكتروني خاص بالشركة فقط.' : 'Please enter a corporate email address only.');
+        inputEmail.style.borderColor = '#ef4444';
+        return;
+      }
+
+      userData = { name: inputName.value, email: emailVal, phone: inputPhone.value };
       if (leadFormOverlay) {
         leadFormOverlay.classList.remove('active');
         setTimeout(() => leadFormOverlay.style.display = 'none', 400);
@@ -168,10 +209,9 @@ const ChatWidget: React.FC = () => {
 
     function showServiceOptions() {
       if (!chatMessages) return;
-      // CHANGE: Added an ID to the container so it can be easily selected and removed later.
       const optionsContainer = document.createElement('div');
       optionsContainer.className = 'service-options-container';
-      optionsContainer.id = 'serviceOptionsContainer'; // <-- CHANGE HERE
+      optionsContainer.id = 'serviceOptionsContainer';
 
       const services = [
         { id: 'agents', title: 'AI Agents', icon: '🤖' },
@@ -190,12 +230,11 @@ const ChatWidget: React.FC = () => {
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
     
-    // CHANGE: New function to display AI Agent specific options.
     function showAIAgentOptions() {
       if (!chatMessages) return;
       const aiOptionsContainer = document.createElement('div');
-      aiOptionsContainer.className = 'service-options-container'; // Re-using the same class for styling
-      aiOptionsContainer.id = 'aiAgentOptionsContainer'; // Unique ID for removal
+      aiOptionsContainer.className = 'service-options-container';
+      aiOptionsContainer.id = 'aiAgentOptionsContainer';
 
       const aiServices = [
         { title: 'AI Agents', message: 'Tell me more about AI Agents' },
@@ -207,7 +246,6 @@ const ChatWidget: React.FC = () => {
         btn.className = 'service-option';
         btn.innerHTML = `<span class="service-icon">🤖</span><span>${s.title}</span>`;
         btn.onclick = () => {
-          // When an option is clicked, remove this container and send the specific message.
           document.getElementById('aiAgentOptionsContainer')?.remove();
           const uMsg = document.createElement('div');
           uMsg.className = 'user-message';
@@ -223,11 +261,8 @@ const ChatWidget: React.FC = () => {
     }
 
     function handleServiceClick(title: string) {
-      // CHANGE: Find and remove the service options container immediately upon any click.
       const serviceContainer = document.getElementById('serviceOptionsContainer');
-      if (serviceContainer) {
-        serviceContainer.remove();
-      }
+      if (serviceContainer) serviceContainer.remove();
 
       const uMsg = document.createElement('div');
       uMsg.className = 'user-message';
@@ -235,12 +270,9 @@ const ChatWidget: React.FC = () => {
       chatMessages?.appendChild(uMsg);
       addTimestamp(uMsg);
 
-      // CHANGE: Check if the clicked service was "AI Agents".
       if (title === 'AI Agents') {
-        // If so, show the new AI Agent options instead of sending a message to the webhook immediately.
         showAIAgentOptions();
       } else {
-        // For all other services, proceed as before.
         sendMessageToWebhook(title);
       }
     }
@@ -260,7 +292,7 @@ const ChatWidget: React.FC = () => {
         const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, session_id: SESSION_ID, user_name: userData.name, phone_number: userData.phone, email: userData.email, language: selectedLanguage })
+          body: JSON.stringify({ message, session_id: SESSION_ID, user_name: userData.name, language: selectedLanguage })
         });
         const txt = await res.text();
         let out = "";
@@ -297,7 +329,7 @@ const ChatWidget: React.FC = () => {
               introContainer.style.display = 'none';
               displayInitialMessage();
             }, 800);
-          }, 5000); // 5 SECONDS DURATION AS REQUESTED
+          }, 5000);
         }
       }
     };
@@ -330,7 +362,6 @@ const ChatWidget: React.FC = () => {
       </div>
       
       <div className="chat-container-v2" id="chatContainer">
-        {/* Intro GIF Overlay - Full Frame Coverage with high Z-index */}
         <div className="intro-container" id="introContainer">
            <img id="introGif" className="intro-gif" alt="TradMAK Authorization" />
         </div>
@@ -355,7 +386,6 @@ const ChatWidget: React.FC = () => {
 
         <div className="chat-messages-v2" id="chatMessages"></div>
 
-        {/* Lead Form Overlay */}
         <div className="lead-form-v2" id="leadFormOverlay">
           <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 text-black">Authorization</h3>
           <p className="text-sm text-gray-500 mb-8">Establish secure identification to proceed.</p>

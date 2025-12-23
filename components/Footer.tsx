@@ -29,7 +29,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   // Data object defined locally to ensure availability during render
   const footerLinks = {
-    quickLinks: [
+    products: [
       { label: 'Whatsapp', href: '#/whatsapp-automation' },
       { label: 'AI Agents', href: '#/ai-agents' },
       { label: 'AaaS', href: '#/aaas' },
@@ -88,9 +88,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         <div className="col-span-4 md:col-span-2 lg:col-span-2">
-          <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Quick Links</h4>
+          <h4 className="text-gray-500 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">Products</h4>
           <ul className="space-y-4">
-            {(footerLinks.quickLinks || []).map(link => (
+            {(footerLinks.products || []).map(link => (
               <li key={link.label}>
                 <a href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-gray-400 hover:text-blue-swiss text-sm font-medium transition-colors">{link.label}</a>
               </li>

@@ -145,8 +145,8 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
   return (
     <div className="min-h-screen bg-creme text-black pt-20">
       
-      {/* --- HERO SECTION REDESIGNED --- */}
-      <section className="relative border-b border-gray-300 overflow-hidden pt-32 pb-20 md:pt-48 md:pb-32">
+      {/* --- HERO SECTION --- */}
+      <section className="relative border-b border-gray-300 overflow-hidden pt-32 pb-20 md:pt-40 md:pb-24">
         
         {/* Animated Shader Background (Light) */}
         <div className="absolute inset-0 z-0 bg-creme pointer-events-none">
@@ -168,7 +168,7 @@ export const AIAgentsPage: React.FC<AIAgentsPageProps> = ({ onScheduleDemo }) =>
                   Deploy autonomous synthetic workers that don't just chat—they analyze, negotiate, and execute complex trade workflows in real-time.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <ButtonPrimary>Deploy Swarm</ButtonPrimary>
+                  <ButtonPrimary onClick={onScheduleDemo}>Deploy Swarm</ButtonPrimary>
                   <ButtonOutline icon>View Architecture</ButtonOutline>
                 </div>
             </div>
