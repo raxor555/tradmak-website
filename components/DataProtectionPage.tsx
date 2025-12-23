@@ -17,7 +17,7 @@ export const DataProtectionPage: React.FC = () => {
             
             <div className="text-gray-700 font-sans">
               <div className="mb-12 flex flex-wrap gap-8 font-mono text-[10px] uppercase tracking-widest border-b border-gray-200 pb-6">
-                <div>Last Updated: [Insert Date]</div>
+                <div>Last Updated: [December 23, 2025]</div>
               </div>
 
               <div className="text-xl md:text-2xl text-black font-light leading-relaxed mb-16 max-w-4xl">
